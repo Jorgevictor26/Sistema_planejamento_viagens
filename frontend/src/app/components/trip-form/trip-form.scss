@@ -1,0 +1,47 @@
+.trip-form-card {
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+form {
+  display: grid;
+  gap: 18px;
+  padding: 20px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.file-field {
+  display: grid;
+  align-content: center;
+  gap: 8px;
+  min-height: 56px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
+.file-field span {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+@media (max-width: 720px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}

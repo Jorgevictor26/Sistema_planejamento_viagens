@@ -1,0 +1,17 @@
+<app-navbar />
+
+<main class="create-shell">
+  <header class="page-head">
+    <div>
+      <span class="eyebrow">Nova viagem</span>
+      <h1>Criar planejamento</h1>
+    </div>
+    <a mat-stroked-button routerLink="/trips">Voltar</a>
+  </header>
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  <app-trip-form [loading]="loading()" (submitted)="save($event)" (cancelled)="cancel()" />
+</main>

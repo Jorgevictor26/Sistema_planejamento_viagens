@@ -1,0 +1,35 @@
+@if (loading()) {
+  <div class="state">Carregando despesas...</div>
+} @else if (expenses().length) {
+  <div class="table-shell">
+    <table>
+      <thead>
+        <tr>
+          <th>Viagem</th>
+          <th>Categoria</th>
+          <th>Valor</th>
+          <th>Data</th>
+          <th>Descricao</th>
+          <th>Acoes</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (expense of expenses(); track expense.id) {
+          <tr>
+            <td>{{ expense.trip?.destination_city || 'Viagem' }}</td>
+            <td>{{ expense.category }}</td>
+            <td>{{ +expense.amount | currency:'USD':'symbol':'1.2-2' }}</td>
+            <td>{{ expense.expense_date ? (expense.expense_date | date:'dd/MM/yyyy') : 'Sem data' }}</td>
+            <td>{{ expense.description || '-' }}</td>
+            <td>
+              <button mat-button type="button" (click)="edited.emit(expense)">Editar</button>
+              <button mat-button type="button" (click)="removed.emit(expense.id)">Excluir</button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+} @else {
+  <div class="state">Nenhuma despesa encontrada.</div>
+}

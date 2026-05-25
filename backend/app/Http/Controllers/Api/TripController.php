@@ -26,6 +26,13 @@ class TripController extends Controller
         return $this->success('Viagem criada com sucesso.', $trip, Response::HTTP_CREATED);
     }
 
+    public function show(Trip $trip): JsonResponse
+    {
+        $this->authorizeTrip($trip);
+
+        return $this->success('Viagem encontrada com sucesso.', $trip);
+    }
+
     public function update(Request $request, Trip $trip): JsonResponse
     {
         $this->authorizeTrip($trip);

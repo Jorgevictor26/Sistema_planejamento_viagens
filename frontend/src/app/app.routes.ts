@@ -6,6 +6,10 @@ import { ForgotPasswordPage } from './pages/forgot-password/forgot-password';
 import { HomePage } from './pages/home/home';
 import { LoginPage } from './pages/login/login';
 import { RegisterPage } from './pages/register/register';
+import { CreateTripPage } from './pages/create-trip/create-trip';
+import { ExpensesPage } from './pages/expenses/expenses';
+import { TripDetailsPage } from './pages/trip-details/trip-details';
+import { TripsPage } from './pages/trips/trips';
 
 export const routes: Routes = [
   { path: '', component: HomePage },
@@ -13,5 +17,9 @@ export const routes: Routes = [
   { path: 'register', component: RegisterPage },
   { path: 'forgot-password', component: ForgotPasswordPage },
   { path: 'dashboard', component: DashboardPage, canActivate: [authGuard] },
+  { path: 'trips', component: TripsPage, canActivate: [authGuard] },
+  { path: 'trips/new', component: CreateTripPage, canActivate: [authGuard] },
+  { path: 'trips/:id', component: TripDetailsPage, canActivate: [authGuard] },
+  { path: 'expenses', component: ExpensesPage, canActivate: [authGuard] },
   { path: '**', redirectTo: 'dashboard' },
 ];

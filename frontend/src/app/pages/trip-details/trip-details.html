@@ -1,0 +1,55 @@
+<app-navbar />
+
+<main class="details-shell">
+  <header class="page-head">
+    <div>
+      <span class="eyebrow">Detalhes</span>
+      <h1>{{ trip()?.destination_city || 'Viagem' }}</h1>
+    </div>
+    <div class="actions">
+      <a mat-stroked-button routerLink="/trips">Voltar</a>
+      <button mat-flat-button color="primary" type="button" (click)="editing.set(!editing())">
+        {{ editing() ? 'Fechar edicao' : 'Editar' }}
+      </button>
+      <button mat-stroked-button type="button" (click)="deleteTrip()">Excluir</button>
+    </div>
+  </header>
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  @if (loading()) {
+    <p class="state">Carregando viagem...</p>
+  } @else if (trip(); as item) {
+    @if (editing()) {
+      <app-trip-form [trip]="item" [loading]="saving()" (submitted)="save($event)" (cancelled)="editing.set(false)" />
+    } @else {
+      <section class="details-grid">
+        <mat-card class="summary-card" appearance="outlined">
+          @if (imageUrl(); as image) {
+            <img [src]="image" [alt]="item.destination_city">
+          }
+          <mat-card-content>
+            <span>{{ item.destination_country }}</span>
+            <h2>{{ item.destination_city }}</h2>
+            @if (item.description) {
+              <p>{{ item.description }}</p>
+            }
+            <dl>
+              <div><dt>Inicio</dt><dd>{{ item.start_date ? (item.start_date | date:'dd/MM/yyyy') : 'Sem data' }}</dd></div>
+              <div><dt>Fim</dt><dd>{{ item.end_date ? (item.end_date | date:'dd/MM/yyyy') : 'Sem data' }}</dd></div>
+              <div><dt>Orcamento</dt><dd>{{ item.budget ? (+item.budget | currency:'USD':'symbol':'1.0-0') : 'Nao definido' }}</dd></div>
+              <div><dt>Coordenadas</dt><dd>{{ item.latitude }}, {{ item.longitude }}</dd></div>
+            </dl>
+          </mat-card-content>
+        </mat-card>
+
+        <div class="side-stack">
+          <app-trip-map [latitude]="item.latitude" [longitude]="item.longitude" [label]="item.destination_city" />
+          <app-weather-widget [destination]="weatherDestination()" />
+        </div>
+      </section>
+    }
+  }
+</main>

@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ExpenseController;
+use App\Http\Controllers\Api\ItineraryController;
 use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\TripController;
 use App\Http\Controllers\Api\WeatherController;
@@ -16,5 +18,7 @@ Route::get('/weather', [WeatherController::class, 'current']);
 Route::middleware('jwt')->group(function (): void {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
-    Route::apiResource('trips', TripController::class)->except(['show']);
+    Route::apiResource('trips', TripController::class);
+    Route::apiResource('expenses', ExpenseController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::apiResource('itineraries', ItineraryController::class)->only(['index', 'store', 'update', 'destroy']);
 });

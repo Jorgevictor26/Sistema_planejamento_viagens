@@ -1,0 +1,11 @@
+@if (loading()) {
+  <div class="state">Carregando viagens...</div>
+} @else if (trips().length) {
+  <div class="trip-grid">
+    @for (trip of trips(); track trip.id) {
+      <app-trip-card [trip]="trip" (removed)="removed.emit($event)" />
+    }
+  </div>
+} @else {
+  <div class="state">Nenhuma viagem encontrada.</div>
+}
