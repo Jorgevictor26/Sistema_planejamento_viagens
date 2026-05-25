@@ -19,7 +19,7 @@ class TripRepository
             : 'created_at';
 
         $direction = ($filters['direction'] ?? 'desc') === 'asc' ? 'asc' : 'desc';
-        $perPage = min((int) ($filters['per_page'] ?? 10), 50);
+        $perPage = min(max((int) ($filters['per_page'] ?? 10), 1), 50);
 
         return $query->orderBy($sort, $direction)->paginate($perPage);
     }

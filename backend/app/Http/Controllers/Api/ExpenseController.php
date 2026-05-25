@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ExpenseResource;
 use App\Models\Expense;
 use App\Services\ExpenseService;
 use Illuminate\Http\JsonResponse;
@@ -17,14 +18,14 @@ class ExpenseController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        return $this->success('Despesas encontradas com sucesso.', $this->expenses->list(Auth::id(), $request->query()));
+        return $this->success('Despesas encontradas com sucesso.', ExpenseResource::collection($this->expenses->list(Auth::id(), $request->query()))->response()->getData(true));
     }
 
     public function store(Request $request): JsonResponse
     {
         return $this->success(
             'Despesa criada com sucesso.',
-            $this->expenses->create(Auth::id(), $this->validated($request)),
+            new ExpenseResource($this->expenses->create(Auth::id(), $this->validated($request))),
             Response::HTTP_CREATED
         );
     }
@@ -33,7 +34,7 @@ class ExpenseController extends Controller
     {
         return $this->success(
             'Despesa atualizada com sucesso.',
-            $this->expenses->update(Auth::id(), $expense, $this->validated($request, true))
+            new ExpenseResource($this->expenses->update(Auth::id(), $expense, $this->validated($request, true)))
         );
     }
 

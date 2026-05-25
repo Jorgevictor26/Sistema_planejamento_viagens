@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\TripResource;
 use App\Models\Expense;
 use App\Models\Trip;
 use Illuminate\Http\JsonResponse;
@@ -26,11 +27,11 @@ class DashboardController extends Controller
     {
         return $this->success(
             'Viagens recentes encontradas com sucesso.',
-            Trip::query()
+            TripResource::collection(Trip::query()
                 ->where('user_id', Auth::id())
                 ->latest('created_at')
                 ->limit(5)
-                ->get()
+                ->get())
         );
     }
 

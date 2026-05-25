@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ItineraryResource;
 use App\Models\Itinerary;
 use App\Services\ItineraryService;
 use Illuminate\Http\JsonResponse;
@@ -16,14 +17,14 @@ class ItineraryController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        return $this->success('Itinerarios encontrados com sucesso.', $this->itineraries->list(Auth::id(), $request->query()));
+        return $this->success('Itinerarios encontrados com sucesso.', ItineraryResource::collection($this->itineraries->list(Auth::id(), $request->query()))->response()->getData(true));
     }
 
     public function store(Request $request): JsonResponse
     {
         return $this->success(
             'Itinerario criado com sucesso.',
-            $this->itineraries->create(Auth::id(), $this->validated($request)),
+            new ItineraryResource($this->itineraries->create(Auth::id(), $this->validated($request))),
             Response::HTTP_CREATED
         );
     }
@@ -32,7 +33,7 @@ class ItineraryController extends Controller
     {
         return $this->success(
             'Itinerario atualizado com sucesso.',
-            $this->itineraries->update(Auth::id(), $itinerary, $this->validated($request, true))
+            new ItineraryResource($this->itineraries->update(Auth::id(), $itinerary, $this->validated($request, true)))
         );
     }
 

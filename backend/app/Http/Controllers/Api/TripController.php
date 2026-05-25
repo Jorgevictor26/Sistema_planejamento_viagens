@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\TripResource;
 use App\Models\Trip;
 use App\Services\TripService;
 use Illuminate\Http\JsonResponse;
@@ -16,28 +17,28 @@ class TripController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        return $this->success('Viagens encontradas com sucesso.', $this->trips->list(Auth::id(), $request->query()));
+        return $this->success('Viagens encontradas com sucesso.', TripResource::collection($this->trips->list(Auth::id(), $request->query()))->response()->getData(true));
     }
 
     public function store(Request $request): JsonResponse
     {
         $trip = $this->trips->create(Auth::id(), $this->validated($request));
 
-        return $this->success('Viagem criada com sucesso.', $trip, Response::HTTP_CREATED);
+        return $this->success('Viagem criada com sucesso.', new TripResource($trip), Response::HTTP_CREATED);
     }
 
     public function show(Trip $trip): JsonResponse
     {
         $this->authorizeTrip($trip);
 
-        return $this->success('Viagem encontrada com sucesso.', $trip);
+        return $this->success('Viagem encontrada com sucesso.', new TripResource($trip));
     }
 
     public function update(Request $request, Trip $trip): JsonResponse
     {
         $this->authorizeTrip($trip);
 
-        return $this->success('Viagem atualizada com sucesso.', $this->trips->update($trip, $this->validated($request, true)));
+        return $this->success('Viagem atualizada com sucesso.', new TripResource($this->trips->update($trip, $this->validated($request, true))));
     }
 
     public function destroy(Trip $trip): JsonResponse
