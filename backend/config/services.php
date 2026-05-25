@@ -35,4 +35,17 @@ return [
         ],
     ],
 
+    'geodb' => [
+        'base_url' => env('GEODB_BASE_URL', 'https://geodb-free-service.wirefreethought.com'),
+        'api_key' => env('GEODB_API_KEY'),
+        'api_key_header' => env('GEODB_API_KEY_HEADER', 'X-Api-Key'),
+    ],
+
+    'openweather' => [
+        'base_url' => env('OPENWEATHER_BASE_URL', 'https://api.openweathermap.org'),
+        'key' => env('OPENWEATHER_API_KEY'),
+        'units' => env('OPENWEATHER_UNITS', 'metric'),
+        'lang' => env('OPENWEATHER_LANG', 'pt_br'),
+    ],
+
 ];

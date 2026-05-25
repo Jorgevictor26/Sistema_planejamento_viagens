@@ -1,0 +1,51 @@
+<main class="auth-shell">
+  <section class="auth-copy">
+    <div class="brand-row">
+      <span class="brand-mark">TV</span>
+      <app-theme-toggle />
+    </div>
+    <h1>Planeje viagens com contexto real.</h1>
+    <p>Descubra cidades, confira o clima antes de decidir e organize cada partida com mais clareza.</p>
+    <div class="travel-photo" role="img" aria-label="Paisagem de viagem ao entardecer"></div>
+  </section>
+
+  <mat-card class="auth-card" appearance="outlined">
+    <mat-card-header>
+      <mat-card-title>Entrar</mat-card-title>
+      <mat-card-subtitle>Acesse sua conta</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" formControlName="email" autocomplete="email">
+          @if (form.controls.email.touched && form.controls.email.invalid) {
+            <mat-error>Email invalido</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Senha</mat-label>
+          <input matInput type="password" formControlName="password" autocomplete="current-password">
+          @if (form.controls.password.touched && form.controls.password.invalid) {
+            <mat-error>Senha obrigatoria</mat-error>
+          }
+        </mat-form-field>
+
+        @if (error()) {
+          <p class="feedback">{{ error() }}</p>
+        }
+
+        <button mat-flat-button color="primary" type="submit" [disabled]="loading()">
+          {{ loading() ? 'Entrando...' : 'Entrar' }}
+        </button>
+      </form>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <a routerLink="/forgot-password">Esqueci a senha</a>
+      <a routerLink="/register">Criar conta</a>
+    </mat-card-actions>
+  </mat-card>
+</main>

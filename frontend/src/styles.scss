@@ -1,1 +1,51 @@
-/* You can add global styles to this file, and also import other style files */
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+:root {
+  --background: #f5f7fb;
+  --surface: #ffffff;
+  --text: #172033;
+  --muted: #667085;
+  --border: #d8dee9;
+  --accent: #2563eb;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background:
+    linear-gradient(135deg, rgba(37, 99, 235, 0.12), transparent 34%),
+    linear-gradient(315deg, rgba(16, 185, 129, 0.12), transparent 30%),
+    var(--background);
+  color: var(--text);
+  font-family: Inter, Roboto, Arial, sans-serif;
+}
+
+body.dark-theme {
+  --background: #12151c;
+  --surface: #1c2230;
+  --text: #edf2f7;
+  --muted: #aab4c5;
+  --border: #344052;
+  --accent: #38bdf8;
+}
+
+body.dark-theme .mat-mdc-card,
+body.dark-theme .mat-mdc-text-field-wrapper,
+body.dark-theme .mat-mdc-autocomplete-panel {
+  color: var(--text);
+  background: var(--surface);
+}
+
+body.dark-theme .mat-mdc-form-field-label,
+body.dark-theme .mat-mdc-input-element,
+body.dark-theme .mat-mdc-card-subtitle {
+  color: var(--text);
+}

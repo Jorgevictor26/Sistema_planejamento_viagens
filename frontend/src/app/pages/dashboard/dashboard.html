@@ -1,0 +1,86 @@
+<main class="dashboard-shell">
+  <header class="topbar">
+    <div>
+      <span class="eyebrow">Dashboard</span>
+      <h1>Pesquisa inteligente de destinos</h1>
+    </div>
+
+    <div class="actions">
+      <app-theme-toggle />
+      <button mat-stroked-button type="button" (click)="auth.logout()">
+        <span class="button-icon" aria-hidden="true">↪</span>
+        Sair
+      </button>
+    </div>
+  </header>
+
+  <section class="search-panel">
+    <mat-form-field appearance="outline">
+      <mat-label>Pesquisar cidade ou pais</mat-label>
+      <input
+        matInput
+        type="text"
+        [formControl]="cityControl"
+        [matAutocomplete]="citiesAuto"
+        autocomplete="off"
+      >
+      <mat-autocomplete #citiesAuto="matAutocomplete" [displayWith]="displayCity" (optionSelected)="chooseCity($event.option.value)">
+        @for (city of cities$ | async; track city.id) {
+          <mat-option [value]="city">
+            @if (city.type === 'country') {
+              Pais - {{ city.name }} ({{ city.country_code }})
+            } @else {
+              Cidade - {{ city.name }} - {{ city.country }} @if (city.region) { <span>({{ city.region }})</span> }
+            }
+          </mat-option>
+        }
+      </mat-autocomplete>
+    </mat-form-field>
+  </section>
+
+  <section class="content-grid">
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>Destino selecionado</mat-card-title>
+        <mat-card-subtitle>Cidade ou pais</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        @if (selectedCity(); as city) {
+          <dl>
+            <div><dt>Tipo</dt><dd>{{ city.type === 'country' ? 'Pais' : 'Cidade' }}</dd></div>
+            <div><dt>Nome</dt><dd>{{ city.name }}</dd></div>
+            <div><dt>Pais</dt><dd>{{ city.country }} ({{ city.country_code }})</dd></div>
+            @if (city.type === 'city') {
+              <div><dt>Latitude</dt><dd>{{ city.latitude }}</dd></div>
+              <div><dt>Longitude</dt><dd>{{ city.longitude }}</dd></div>
+            }
+          </dl>
+        } @else {
+          <p class="empty">Comece digitando uma cidade ou pais.</p>
+        }
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>Clima atual</mat-card-title>
+        <mat-card-subtitle>OpenWeatherMap</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        @if (weather(); as item) {
+          <div class="weather-readout">
+            <strong>{{ item.temperature }} C</strong>
+            <span>{{ item.description }}</span>
+          </div>
+          <dl>
+            <div><dt>Sensacao</dt><dd>{{ item.feels_like }} C</dd></div>
+            <div><dt>Humidade</dt><dd>{{ item.humidity }}%</dd></div>
+            <div><dt>Vento</dt><dd>{{ item.wind_speed }} m/s</dd></div>
+          </dl>
+        } @else {
+          <p class="empty">{{ error() || 'Selecione uma cidade para ver o clima.' }}</p>
+        }
+      </mat-card-content>
+    </mat-card>
+  </section>
+</main>
