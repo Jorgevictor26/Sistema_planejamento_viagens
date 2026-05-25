@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 
 import { authGuard } from './guards/auth.guard';
 import { DashboardPage } from './pages/dashboard/dashboard';
+import { FavoritesPage } from './pages/favorites/favorites';
 import { ForgotPasswordPage } from './pages/forgot-password/forgot-password';
 import { HomePage } from './pages/home/home';
 import { ItineraryPage } from './pages/itinerary/itinerary';
@@ -23,5 +24,6 @@ export const routes: Routes = [
   { path: 'trips/:id', component: TripDetailsPage, canActivate: [authGuard] },
   { path: 'expenses', component: ExpensesPage, canActivate: [authGuard] },
   { path: 'itinerary', component: ItineraryPage, canActivate: [authGuard] },
+  { path: 'favorites', component: FavoritesPage, canActivate: [authGuard] },
   { path: '**', redirectTo: 'dashboard' },
 ];

@@ -1,0 +1,11 @@
+@if (loading()) {
+  <div class="state">Carregando favoritos...</div>
+} @else if (favorites().length) {
+  <div class="favorite-grid">
+    @for (favorite of favorites(); track favorite.id) {
+      <app-favorite-card [favorite]="favorite" (removed)="removed.emit($event)" />
+    }
+  </div>
+} @else {
+  <div class="state">Nenhum favorito salvo.</div>
+}

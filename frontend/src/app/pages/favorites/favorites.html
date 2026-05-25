@@ -1,0 +1,48 @@
+<app-navbar />
+
+<main class="favorites-shell">
+  <header class="page-head">
+    <div>
+      <span class="eyebrow">Favoritos</span>
+      <h1>Destinos, hoteis e restaurantes</h1>
+    </div>
+  </header>
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  <mat-card class="favorite-form-card" appearance="outlined">
+    <form [formGroup]="form" (ngSubmit)="saveFavorite()">
+      <mat-form-field appearance="outline">
+        <mat-label>Titulo</mat-label>
+        <input matInput formControlName="title" placeholder="Ex: Museu Nacional">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Tipo</mat-label>
+        <mat-select formControlName="type">
+          @for (type of types; track type) {
+            <mat-option [value]="type">{{ type }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Localizacao</mat-label>
+        <input matInput formControlName="location" placeholder="Cidade, pais ou endereco">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Imagem URL</mat-label>
+        <input matInput formControlName="image" placeholder="https://...">
+      </mat-form-field>
+
+      <button mat-flat-button color="primary" type="submit" [disabled]="saving()">
+        {{ saving() ? 'Salvando...' : 'Salvar favorito' }}
+      </button>
+    </form>
+  </mat-card>
+
+  <app-favorite-list [favorites]="favorites()" [loading]="loading()" (removed)="deleteFavorite($event)" />
+</main>

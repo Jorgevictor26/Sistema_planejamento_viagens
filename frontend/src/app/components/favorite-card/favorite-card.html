@@ -1,0 +1,20 @@
+<mat-card class="favorite-card" appearance="outlined">
+  @if (favorite().image) {
+    <img [src]="favorite().image" [alt]="favorite().title">
+  } @else {
+    <div class="image-placeholder">
+      <span>{{ favorite().type.slice(0, 2).toUpperCase() }}</span>
+    </div>
+  }
+
+  <mat-card-content>
+    <div class="meta">
+      <span>{{ favorite().type }}</span>
+      <strong>{{ favorite().title }}</strong>
+      @if (favorite().location) {
+        <small>{{ favorite().location }}</small>
+      }
+    </div>
+    <button mat-stroked-button type="button" (click)="removed.emit(favorite().id)">Remover</button>
+  </mat-card-content>
+</mat-card>

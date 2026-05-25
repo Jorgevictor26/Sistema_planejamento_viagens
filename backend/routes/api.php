@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\ItineraryController;
 use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\TripController;
+use App\Http\Controllers\Api\UploadController;
 use App\Http\Controllers\Api\WeatherController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,4 +24,5 @@ Route::middleware('jwt')->group(function (): void {
     Route::apiResource('expenses', ExpenseController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::apiResource('itineraries', ItineraryController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::apiResource('favorites', FavoriteController::class)->only(['index', 'store', 'destroy']);
+    Route::apiResource('uploads', UploadController::class)->only(['index', 'store', 'destroy']);
 });

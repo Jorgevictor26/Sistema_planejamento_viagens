@@ -35,6 +35,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Favorite::class);
     }
 
+    public function uploads(): HasMany
+    {
+        return $this->hasMany(Upload::class);
+    }
+
     /**
      * Get the attributes that should be cast.
      *
