@@ -1,0 +1,57 @@
+.upload-box {
+  position: relative;
+  display: grid;
+  min-height: 180px;
+  place-items: center;
+  border: 2px dashed var(--border);
+  border-radius: 8px;
+  padding: 22px;
+  background: color-mix(in srgb, var(--surface) 86%, transparent);
+  transition: border-color 160ms ease, background 160ms ease;
+}
+
+.upload-box.dragging {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+}
+
+input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.drop-content {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.drop-content strong {
+  font-size: 1.15rem;
+}
+
+.drop-content span,
+.selected-files span {
+  color: var(--muted);
+}
+
+.selected-files {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.selected-files div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  background: var(--surface);
+}

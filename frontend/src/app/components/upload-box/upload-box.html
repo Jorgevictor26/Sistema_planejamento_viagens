@@ -1,0 +1,34 @@
+<section
+  class="upload-box"
+  [class.dragging]="dragging()"
+  (dragover)="$event.preventDefault(); dragging.set(true)"
+  (dragleave)="dragging.set(false)"
+  (drop)="onDrop($event)"
+>
+  <input
+    #fileInput
+    type="file"
+    [attr.accept]="accept()"
+    [multiple]="multiple()"
+    (change)="onFilesSelected($event)"
+  >
+
+  <div class="drop-content">
+    <strong>{{ label() }}</strong>
+    <span>{{ hint() }}</span>
+    <button mat-stroked-button type="button" (click)="fileInput.click()">Selecionar arquivos</button>
+  </div>
+</section>
+
+@if (files().length) {
+  <div class="selected-files">
+    @for (file of files(); track file.name + file.size; let index = $index) {
+      <div>
+        <span>{{ file.name }}</span>
+        <button mat-button type="button" (click)="removeFile(index)">Remover</button>
+      </div>
+    }
+  </div>
+
+  <app-image-preview [files]="files()" />
+}

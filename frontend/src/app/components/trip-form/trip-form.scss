@@ -19,19 +19,8 @@ mat-form-field {
   width: 100%;
 }
 
-.file-field {
-  display: grid;
-  align-content: center;
-  gap: 8px;
-  min-height: 56px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 10px 14px;
-}
-
-.file-field span {
-  color: var(--muted);
-  font-size: 0.82rem;
+.upload-field {
+  grid-column: span 2;
 }
 
 .actions {
@@ -43,5 +32,9 @@ mat-form-field {
 @media (max-width: 720px) {
   .form-grid {
     grid-template-columns: 1fr;
+  }
+
+  .upload-field {
+    grid-column: auto;
   }
 }

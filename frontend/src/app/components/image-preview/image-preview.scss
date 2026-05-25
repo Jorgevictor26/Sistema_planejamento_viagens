@@ -1,0 +1,40 @@
+.preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+figure {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  object-fit: cover;
+  background: var(--surface);
+}
+
+figcaption,
+.empty {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+figcaption {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.empty {
+  display: grid;
+  min-height: 110px;
+  place-items: center;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+}

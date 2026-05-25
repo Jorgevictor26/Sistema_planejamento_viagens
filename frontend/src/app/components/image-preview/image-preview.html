@@ -1,0 +1,12 @@
+@if (previews().length) {
+  <div class="preview-grid">
+    @for (preview of previews(); track preview.url) {
+      <figure>
+        <img [src]="preview.url" [alt]="preview.name">
+        <figcaption>{{ preview.name }}</figcaption>
+      </figure>
+    }
+  </div>
+} @else {
+  <div class="empty">Nenhuma imagem para preview.</div>
+}

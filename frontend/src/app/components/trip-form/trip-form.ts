@@ -6,10 +6,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
 import { Trip, TripPayload } from '../../services/trip.service';
+import { UploadBox } from '../upload-box/upload-box';
 
 @Component({
   selector: 'app-trip-form',
-  imports: [ReactiveFormsModule, MatButtonModule, MatCardModule, MatFormFieldModule, MatInputModule],
+  imports: [ReactiveFormsModule, MatButtonModule, MatCardModule, MatFormFieldModule, MatInputModule, UploadBox],
   templateUrl: './trip-form.html',
   styleUrl: './trip-form.scss',
 })
@@ -55,9 +56,8 @@ export class TripForm {
     });
   }
 
-  onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    this.selectedImage = input.files?.[0] ?? null;
+  onFilesSelected(files: File[]): void {
+    this.selectedImage = files.find((file) => file.type.startsWith('image/')) ?? null;
   }
 
   submit(): void {

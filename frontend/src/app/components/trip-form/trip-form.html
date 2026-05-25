@@ -36,10 +36,15 @@
         <input matInput type="number" min="0" formControlName="budget">
       </mat-form-field>
 
-      <label class="file-field">
-        <span>Imagem da viagem</span>
-        <input type="file" accept="image/*" (change)="onFileSelected($event)">
-      </label>
+      <div class="upload-field">
+        <app-upload-box
+          accept="image/*"
+          [multiple]="true"
+          label="Imagem da viagem"
+          hint="Arraste uma ou mais imagens"
+          (filesSelected)="onFilesSelected($event)"
+        />
+      </div>
     </div>
 
     <mat-form-field appearance="outline">
