@@ -4,6 +4,7 @@ import { authGuard } from './guards/auth.guard';
 import { DashboardPage } from './pages/dashboard/dashboard';
 import { ForgotPasswordPage } from './pages/forgot-password/forgot-password';
 import { HomePage } from './pages/home/home';
+import { ItineraryPage } from './pages/itinerary/itinerary';
 import { LoginPage } from './pages/login/login';
 import { RegisterPage } from './pages/register/register';
 import { CreateTripPage } from './pages/create-trip/create-trip';
@@ -21,5 +22,6 @@ export const routes: Routes = [
   { path: 'trips/new', component: CreateTripPage, canActivate: [authGuard] },
   { path: 'trips/:id', component: TripDetailsPage, canActivate: [authGuard] },
   { path: 'expenses', component: ExpensesPage, canActivate: [authGuard] },
+  { path: 'itinerary', component: ItineraryPage, canActivate: [authGuard] },
   { path: '**', redirectTo: 'dashboard' },
 ];

@@ -1,0 +1,26 @@
+@if (loading()) {
+  <div class="state">Carregando roteiro...</div>
+} @else if (itineraries().length) {
+  <div class="list">
+    @for (item of itineraries(); track item.id) {
+      <article class="activity">
+        <div>
+          <span>Dia {{ item.day }} @if (item.time) { - {{ item.time.slice(0, 5) }} }</span>
+          <strong>{{ item.activity }}</strong>
+          @if (item.location) {
+            <small>{{ item.location }}</small>
+          }
+          @if (item.description) {
+            <p>{{ item.description }}</p>
+          }
+        </div>
+        <div class="actions">
+          <button mat-button type="button" (click)="edited.emit(item)">Editar</button>
+          <button mat-button type="button" (click)="removed.emit(item.id)">Remover</button>
+        </div>
+      </article>
+    }
+  </div>
+} @else {
+  <div class="state">Nenhuma atividade cadastrada.</div>
+}

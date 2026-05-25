@@ -1,0 +1,24 @@
+<section class="timeline">
+  @if (days().length) {
+    @for (day of days(); track day.day) {
+      <div class="day">
+        <h2>Dia {{ day.day }}</h2>
+        <div class="items">
+          @for (item of day.items; track item.id) {
+            <article>
+              <time>{{ item.time ? item.time.slice(0, 5) : '--:--' }}</time>
+              <div>
+                <strong>{{ item.activity }}</strong>
+                @if (item.location) {
+                  <span>{{ item.location }}</span>
+                }
+              </div>
+            </article>
+          }
+        </div>
+      </div>
+    }
+  } @else {
+    <p>Nenhum dia organizado ainda.</p>
+  }
+</section>

@@ -1,0 +1,70 @@
+<app-navbar />
+
+<main class="itinerary-shell">
+  <header class="page-head">
+    <div>
+      <span class="eyebrow">Roteiro</span>
+      <h1>Atividades por dia</h1>
+    </div>
+  </header>
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  <section class="planner-grid">
+    <app-itinerary-form
+      [trips]="trips()"
+      [itinerary]="editing()"
+      [loading]="saving()"
+      (submitted)="save($event)"
+      (cancelled)="editing.set(null)"
+    />
+
+    <app-timeline [itineraries]="items()" />
+  </section>
+
+  <mat-card class="filters-card" appearance="outlined">
+    <form [formGroup]="filters" (ngSubmit)="loadItineraries()">
+      <mat-form-field appearance="outline">
+        <mat-label>Viagem</mat-label>
+        <mat-select formControlName="trip_id">
+          <mat-option value="">Todas</mat-option>
+          @for (trip of trips(); track trip.id) {
+            <mat-option [value]="trip.id">{{ trip.destination_city }} - {{ trip.destination_country }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Dia</mat-label>
+        <input matInput type="number" min="1" formControlName="day">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Pesquisar</mat-label>
+        <input matInput formControlName="q" placeholder="Atividade, local ou descricao">
+      </mat-form-field>
+
+      <div class="filter-actions">
+        <button mat-flat-button color="primary" type="submit">Filtrar</button>
+        <button mat-stroked-button type="button" (click)="clearFilters()">Limpar</button>
+      </div>
+    </form>
+  </mat-card>
+
+  <app-itinerary-list
+    [itineraries]="items()"
+    [loading]="loading()"
+    (edited)="editing.set($event)"
+    (removed)="deleteItinerary($event)"
+  />
+
+  @if (pagination(); as page) {
+    <nav class="pager" aria-label="Paginacao">
+      <button mat-stroked-button type="button" [disabled]="!page.prev_page_url" (click)="loadItineraries(page.current_page - 1)">Anterior</button>
+      <span>Pagina {{ page.current_page }} de {{ page.last_page }}</span>
+      <button mat-stroked-button type="button" [disabled]="!page.next_page_url" (click)="loadItineraries(page.current_page + 1)">Proxima</button>
+    </nav>
+  }
+</main>

@@ -1,0 +1,65 @@
+.timeline {
+  display: grid;
+  gap: 18px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 18px;
+  background: var(--surface);
+}
+
+.day {
+  display: grid;
+  gap: 12px;
+}
+
+h2 {
+  margin: 0;
+  color: var(--accent);
+  font-size: 1rem;
+}
+
+.items {
+  display: grid;
+  gap: 10px;
+}
+
+article {
+  display: grid;
+  grid-template-columns: 58px 1fr;
+  gap: 12px;
+  position: relative;
+}
+
+article::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  bottom: -14px;
+  left: 49px;
+  width: 1px;
+  background: var(--border);
+}
+
+.items article:last-child::before {
+  display: none;
+}
+
+time {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+article div {
+  display: grid;
+  gap: 2px;
+  padding-bottom: 10px;
+}
+
+span,
+p {
+  color: var(--muted);
+}
+
+p {
+  margin: 0;
+}

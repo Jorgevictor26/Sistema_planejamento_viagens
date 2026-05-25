@@ -1,0 +1,56 @@
+.list {
+  display: grid;
+  gap: 12px;
+}
+
+.activity {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  background: var(--surface);
+}
+
+.activity div:first-child {
+  display: grid;
+  gap: 5px;
+}
+
+span,
+small,
+p {
+  color: var(--muted);
+}
+
+strong {
+  font-size: 1.1rem;
+}
+
+p {
+  margin: 4px 0 0;
+  line-height: 1.5;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.state {
+  display: grid;
+  min-height: 160px;
+  place-items: center;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  color: var(--muted);
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+}
+
+@media (max-width: 640px) {
+  .activity {
+    grid-template-columns: 1fr;
+  }
+}

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ExpenseController;
+use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\ItineraryController;
 use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\TripController;
@@ -21,4 +22,5 @@ Route::middleware('jwt')->group(function (): void {
     Route::apiResource('trips', TripController::class);
     Route::apiResource('expenses', ExpenseController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::apiResource('itineraries', ItineraryController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::apiResource('favorites', FavoriteController::class)->only(['index', 'store', 'destroy']);
 });
