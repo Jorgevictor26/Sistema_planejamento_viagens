@@ -1,0 +1,11 @@
+<mat-card class="destination-card" appearance="outlined">
+  <img [src]="destination().image" [alt]="destination().name">
+  <mat-card-content>
+    <div class="meta">
+      <span>{{ destination().country }}</span>
+      <strong>{{ destination().name }}</strong>
+    </div>
+    <p>{{ destination().tagline }}</p>
+    <button mat-stroked-button type="button" (click)="selected.emit(destination())">Ver clima</button>
+  </mat-card-content>
+</mat-card>

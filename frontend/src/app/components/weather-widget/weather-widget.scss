@@ -1,0 +1,39 @@
+.weather-card {
+  margin: 0 clamp(20px, 5vw, 64px) clamp(40px, 6vw, 72px);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+mat-card-content {
+  padding-top: 18px;
+}
+
+.temperature {
+  display: grid;
+  gap: 6px;
+}
+
+.temperature strong {
+  font-size: clamp(2.4rem, 5vw, 4.2rem);
+  line-height: 1;
+}
+
+.temperature span,
+.empty,
+.metrics {
+  color: var(--muted);
+}
+
+.metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.metrics span {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: color-mix(in srgb, var(--surface) 92%, var(--accent));
+}

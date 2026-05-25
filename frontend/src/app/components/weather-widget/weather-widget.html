@@ -1,0 +1,30 @@
+<mat-card class="weather-card" appearance="outlined">
+  <mat-card-header>
+    <mat-card-title>{{ language.t('weatherTitle') }}</mat-card-title>
+    <mat-card-subtitle>
+      @if (destination(); as city) {
+        {{ city.name }}, {{ city.country }}
+      } @else {
+        Selecione uma cidade
+      }
+    </mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    @if (loading()) {
+      <p class="empty">A carregar clima...</p>
+    } @else if (weather(); as item) {
+      <div class="temperature">
+        <strong>{{ item.temperature }} C</strong>
+        <span>{{ item.description }}</span>
+      </div>
+      <div class="metrics">
+        <span>Sensacao {{ item.feels_like }} C</span>
+        <span>Humidade {{ item.humidity }}%</span>
+        <span>Vento {{ item.wind_speed }} m/s</span>
+      </div>
+    } @else {
+      <p class="empty">{{ error() || 'Escolha uma cidade sugerida para ver o clima atual.' }}</p>
+    }
+  </mat-card-content>
+</mat-card>

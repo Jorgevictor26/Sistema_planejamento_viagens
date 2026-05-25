@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\LocationController;
+use App\Http\Controllers\Api\TripController;
 use App\Http\Controllers\Api\WeatherController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,4 +16,5 @@ Route::get('/weather', [WeatherController::class, 'current']);
 Route::middleware('jwt')->group(function (): void {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
+    Route::apiResource('trips', TripController::class)->except(['show']);
 });

@@ -1,0 +1,26 @@
+<nav class="navbar">
+  <a class="brand" routerLink="/">
+    <span>TV</span>
+    TravelVista
+  </a>
+
+  <div class="links">
+    <a routerLink="/">{{ language.t('navHome') }}</a>
+    <a routerLink="/dashboard">{{ language.t('navTrips') }}</a>
+  </div>
+
+  <div class="actions">
+    <select [value]="language.language()" (change)="language.setLanguage($any($event.target).value)">
+      <option value="pt">PT</option>
+      <option value="en">EN</option>
+      <option value="fr">FR</option>
+    </select>
+    <app-theme-toggle />
+    @if (auth.isAuthenticated()) {
+      <button mat-stroked-button type="button" (click)="auth.logout()">Sair</button>
+    } @else {
+      <a mat-button routerLink="/login">{{ language.t('navLogin') }}</a>
+      <a mat-flat-button color="primary" routerLink="/register">{{ language.t('navRegister') }}</a>
+    }
+  </div>
+</nav>

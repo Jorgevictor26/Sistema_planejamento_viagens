@@ -1,0 +1,20 @@
+footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-top: 1px solid var(--border);
+  padding: 28px clamp(20px, 5vw, 64px);
+  color: var(--muted);
+}
+
+strong {
+  color: var(--text);
+}
+
+@media (max-width: 640px) {
+  footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

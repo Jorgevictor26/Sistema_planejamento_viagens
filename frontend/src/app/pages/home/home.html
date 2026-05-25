@@ -1,0 +1,5 @@
+<app-navbar />
+<app-hero-search (destinationSelected)="selectedDestination.set($event)" />
+<app-weather-widget [destination]="selectedDestination()" />
+<app-popular-destinations (selected)="selectedDestination.set($event)" />
+<app-footer />
