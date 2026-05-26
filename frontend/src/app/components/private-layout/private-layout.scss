@@ -134,14 +134,18 @@ nav {
   align-items: center;
   gap: 10px;
   margin-left: auto;
+  min-width: 0;
   flex-wrap: wrap;
   justify-content: flex-end;
 }
 
 .nav-search {
   display: flex;
+  flex: 1 1 260px;
   align-items: center;
   gap: 8px;
+  max-width: 360px;
+  min-width: 220px;
   min-height: 42px;
   border: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
   border-radius: 999px;
@@ -151,7 +155,8 @@ nav {
 }
 
 .nav-search input {
-  width: clamp(160px, 20vw, 300px);
+  width: 100%;
+  min-width: 0;
   border: 0;
   outline: 0;
   background: transparent;
@@ -307,6 +312,13 @@ select {
     width: 100%;
     justify-content: flex-end;
     flex-wrap: wrap;
+  }
+
+  .nav-search {
+    order: 10;
+    flex-basis: 100%;
+    max-width: none;
+    min-width: 0;
   }
 
   .new-trip {

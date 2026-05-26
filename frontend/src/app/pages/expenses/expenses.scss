@@ -127,6 +127,11 @@ h1 + p {
   padding: 18px 18px 0;
 }
 
+.filters-title > div {
+  display: grid;
+  gap: 4px;
+}
+
 .filters-card form {
   display: grid;
   grid-template-columns: repeat(5, minmax(140px, 1fr));

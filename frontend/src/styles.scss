@@ -4,6 +4,7 @@
   --background: #f5f7fb;
   --surface: #ffffff;
   --surface-alt: #eef3fb;
+  --surface-raised: #ffffff;
   --text: #172033;
   --muted: #667085;
   --border: #d8dee9;
@@ -36,18 +37,62 @@ body {
 }
 
 body.dark-theme {
-  --background: #0f141b;
-  --surface: #1a2330;
-  --surface-alt: #111923;
-  --text: #edf2f7;
-  --muted: #aab4c5;
-  --border: #344052;
-  --accent: #38bdf8;
+  --background: #0b1118;
+  --surface: #151f2b;
+  --surface-alt: #0f1722;
+  --surface-raised: #1c2938;
+  --text: #f3f7fb;
+  --muted: #c0cad8;
+  --border: #405064;
+  --accent: #67d7ff;
   --accent-contrast: #08111f;
   --accent-soft: color-mix(in srgb, var(--accent) 18%, var(--surface));
   --button-shadow: 0 14px 34px color-mix(in srgb, var(--accent) 18%, transparent);
   --success: #34d399;
-  --danger: #f87171;
+  --danger: #ff8a8a;
+  --mat-app-background-color: var(--background);
+  --mat-app-text-color: var(--text);
+  --mat-card-title-text-color: var(--text);
+  --mat-card-subtitle-text-color: var(--muted);
+  --mat-select-enabled-trigger-text-color: var(--text);
+  --mat-select-enabled-arrow-color: var(--muted);
+  --mat-option-label-text-color: var(--text);
+  --mat-table-background-color: var(--surface);
+  --mat-table-header-headline-color: var(--muted);
+  --mat-table-row-item-label-text-color: var(--text);
+  --mdc-theme-surface: var(--surface-raised);
+  --mdc-theme-on-surface: var(--text);
+  --mdc-theme-primary: var(--accent);
+  --mdc-theme-on-primary: var(--accent-contrast);
+  --mdc-theme-text-primary-on-background: var(--text);
+  --mdc-theme-text-secondary-on-background: var(--muted);
+  --mdc-filled-text-field-container-color: var(--surface-raised);
+  --mdc-filled-text-field-input-text-color: var(--text);
+  --mdc-filled-text-field-label-text-color: var(--muted);
+  --mdc-filled-text-field-hover-label-text-color: var(--text);
+  --mdc-filled-text-field-focus-label-text-color: var(--accent);
+  --mdc-outlined-text-field-input-text-color: var(--text);
+  --mdc-outlined-text-field-label-text-color: var(--muted);
+  --mdc-outlined-text-field-hover-label-text-color: var(--text);
+  --mdc-outlined-text-field-focus-label-text-color: var(--accent);
+  --mdc-outlined-text-field-outline-color: var(--border);
+  --mdc-outlined-text-field-hover-outline-color: var(--muted);
+  --mdc-outlined-text-field-focus-outline-color: var(--accent);
+  --mdc-list-list-item-label-text-color: var(--text);
+  --mdc-list-list-item-supporting-text-color: var(--muted);
+  --mat-option-label-text-color: var(--text);
+  --mat-option-hover-state-layer-color: color-mix(in srgb, var(--accent) 14%, transparent);
+  --mat-option-focus-state-layer-color: color-mix(in srgb, var(--accent) 18%, transparent);
+  --mat-option-selected-state-label-text-color: var(--accent);
+  --mat-select-enabled-trigger-text-color: var(--text);
+  --mat-select-enabled-arrow-color: var(--muted);
+  --mat-select-focused-arrow-color: var(--accent);
+  --mat-datepicker-calendar-date-text-color: var(--text);
+  --mat-datepicker-calendar-body-label-text-color: var(--muted);
+  --mat-datepicker-calendar-period-button-text-color: var(--text);
+  --mat-datepicker-calendar-header-text-color: var(--muted);
+  --mat-datepicker-calendar-container-background-color: var(--surface-raised);
+  --mat-datepicker-calendar-container-text-color: var(--text);
   color-scheme: dark;
 }
 
@@ -56,27 +101,145 @@ body.dark-theme .mat-mdc-text-field-wrapper,
 body.dark-theme .mat-mdc-autocomplete-panel,
 body.dark-theme .mat-mdc-select-panel,
 body.dark-theme .mat-mdc-menu-panel,
+body.dark-theme .mat-mdc-tooltip,
+body.dark-theme .mat-datepicker-content,
+body.dark-theme .mat-calendar,
 body.dark-theme .mat-mdc-dialog-container .mdc-dialog__surface {
   color: var(--text);
-  background: var(--surface);
+  background: var(--surface-raised);
 }
 
 body.dark-theme .mat-mdc-form-field-label,
 body.dark-theme .mat-mdc-input-element,
+body.dark-theme .mdc-text-field__input,
+body.dark-theme .mat-mdc-input-element::placeholder,
+body.dark-theme .mdc-text-field__input::placeholder,
 body.dark-theme .mat-mdc-select-value,
+body.dark-theme .mat-mdc-select-value-text,
 body.dark-theme .mat-mdc-select-arrow,
+body.dark-theme .mat-mdc-card-title,
 body.dark-theme .mat-mdc-card-subtitle,
 body.dark-theme .mat-mdc-option,
+body.dark-theme .mat-mdc-option .mdc-list-item__primary-text,
+body.dark-theme .mdc-list-item__primary-text,
+body.dark-theme .mdc-list-item__secondary-text,
+body.dark-theme .mat-mdc-select-placeholder,
 body.dark-theme .mat-mdc-button,
 body.dark-theme .mat-mdc-outlined-button,
 body.dark-theme .mat-mdc-icon-button {
+  color: var(--text) !important;
+}
+
+body.dark-theme .mat-mdc-form-field-hint,
+body.dark-theme .mat-mdc-form-field-error,
+body.dark-theme .mat-mdc-floating-label,
+body.dark-theme .mat-mdc-select-min-line,
+body.dark-theme .mat-mdc-card-content,
+body.dark-theme .mat-mdc-card-content p,
+body.dark-theme .mat-mdc-form-field-subscript-wrapper,
+body.dark-theme .mdc-floating-label,
+body.dark-theme .mat-calendar-body-label,
+body.dark-theme .mat-calendar-period-button,
+body.dark-theme .mat-calendar-table-header,
+body.dark-theme .mat-calendar-body-cell-content {
+  color: var(--muted) !important;
+}
+
+body.dark-theme .mat-calendar-body-selected,
+body.dark-theme .mat-calendar-body-today.mat-calendar-body-selected {
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+
+body.dark-theme .mat-mdc-option:hover,
+body.dark-theme .mat-mdc-option.mdc-list-item--selected,
+body.dark-theme .mat-mdc-option.mat-mdc-option-active {
+  background: color-mix(in srgb, var(--accent) 16%, var(--surface-raised));
+}
+
+body.dark-theme input,
+body.dark-theme textarea,
+body.dark-theme select {
+  background-color: transparent;
+  color: var(--text) !important;
+  caret-color: var(--accent);
+}
+
+body.dark-theme input::placeholder,
+body.dark-theme textarea::placeholder {
+  color: color-mix(in srgb, var(--muted) 76%, transparent) !important;
+  opacity: 1;
+}
+
+body.dark-theme select option {
+  background: var(--surface-raised);
   color: var(--text);
+}
+
+body.dark-theme input:-webkit-autofill,
+body.dark-theme input:-webkit-autofill:hover,
+body.dark-theme input:-webkit-autofill:focus,
+body.dark-theme textarea:-webkit-autofill,
+body.dark-theme select:-webkit-autofill {
+  -webkit-text-fill-color: var(--text);
+  box-shadow: 0 0 0 1000px var(--surface-raised) inset;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+body.dark-theme table,
+body.dark-theme th,
+body.dark-theme td {
+  color: var(--text);
+}
+
+body.dark-theme th,
+body.dark-theme small,
+body.dark-theme time,
+body.dark-theme .state,
+body.dark-theme .empty,
+body.dark-theme .empty-chart {
+  color: var(--muted);
+}
+
+body.dark-theme .error,
+body.dark-theme .feedback,
+body.dark-theme .mat-mdc-form-field-error,
+body.dark-theme mat-error {
+  color: var(--danger) !important;
+}
+
+body.dark-theme .mat-mdc-form-field .mdc-floating-label {
+  background: var(--surface-raised);
+  border-radius: 4px;
+  padding: 0 4px;
+}
+
+body.dark-theme .mat-mdc-form-field:not(.mat-form-field-should-float) .mdc-floating-label {
+  color: var(--muted) !important;
 }
 
 body.dark-theme .mdc-notched-outline__leading,
 body.dark-theme .mdc-notched-outline__notch,
 body.dark-theme .mdc-notched-outline__trailing {
   border-color: var(--border);
+}
+
+body.dark-theme .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__leading,
+body.dark-theme .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__notch,
+body.dark-theme .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__trailing {
+  border-color: color-mix(in srgb, var(--border) 86%, transparent);
+}
+
+body.dark-theme .mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-notched-outline__leading,
+body.dark-theme .mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-notched-outline__notch,
+body.dark-theme .mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-notched-outline__trailing {
+  border-color: var(--accent);
+}
+
+body.dark-theme .mat-mdc-form-field-focus-overlay,
+body.dark-theme .mat-mdc-select-panel,
+body.dark-theme .mat-mdc-autocomplete-panel {
+  background: var(--surface-raised);
 }
 
 button,

@@ -34,7 +34,8 @@ import { LanguageService } from '../../services/language.service';
     }
 
     option {
-      color: #172033;
+      background: var(--surface-raised);
+      color: var(--text);
     }
   `,
 })

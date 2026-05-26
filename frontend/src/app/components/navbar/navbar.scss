@@ -86,7 +86,8 @@ select {
 }
 
 select option {
-  color: #172033;
+  background: var(--surface-raised);
+  color: var(--text);
 }
 
 .menu-button {
