@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Expense;
 use App\Models\Trip;
+use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -28,7 +29,8 @@ class ExpenseService
 
     public function create(int $userId, array $data): Expense
     {
-        $this->ensureTripBelongsToUser($userId, (int) $data['trip_id']);
+        $trip = $this->ensureTripBelongsToUser($userId, (int) $data['trip_id']);
+        $this->ensureExpenseDateFitsTrip($trip, $data['expense_date'] ?? null);
 
         return Expense::create($data)->load('trip:id,user_id,destination_city,destination_country');
     }
@@ -38,8 +40,12 @@ class ExpenseService
         $this->authorizeExpense($userId, $expense);
 
         if (array_key_exists('trip_id', $data)) {
-            $this->ensureTripBelongsToUser($userId, (int) $data['trip_id']);
+            $trip = $this->ensureTripBelongsToUser($userId, (int) $data['trip_id']);
+        } else {
+            $trip = $expense->trip;
         }
+
+        $this->ensureExpenseDateFitsTrip($trip, $data['expense_date'] ?? $expense->expense_date);
 
         $expense->update($data);
 
@@ -59,12 +65,37 @@ class ExpenseService
         abort_if($expense->trip->user_id !== $userId, Response::HTTP_FORBIDDEN);
     }
 
-    private function ensureTripBelongsToUser(int $userId, int $tripId): void
+    private function ensureTripBelongsToUser(int $userId, int $tripId): Trip
     {
+        $trip = Trip::query()->where('id', $tripId)->where('user_id', $userId)->first();
+
         abort_unless(
-            Trip::query()->where('id', $tripId)->where('user_id', $userId)->exists(),
+            $trip,
             Response::HTTP_UNPROCESSABLE_ENTITY,
             'A viagem informada nao pertence ao usuario autenticado.'
+        );
+
+        return $trip;
+    }
+
+    private function ensureExpenseDateFitsTrip(Trip $trip, mixed $date): void
+    {
+        if (! $date || (! $trip->start_date && ! $trip->end_date)) {
+            return;
+        }
+
+        $expenseDate = Carbon::parse($date)->startOfDay();
+
+        abort_if(
+            $trip->start_date && $expenseDate->lt($trip->start_date->startOfDay()),
+            Response::HTTP_UNPROCESSABLE_ENTITY,
+            'A data da despesa nao pode ser anterior ao inicio da viagem.'
+        );
+
+        abort_if(
+            $trip->end_date && $expenseDate->gt($trip->end_date->startOfDay()),
+            Response::HTTP_UNPROCESSABLE_ENTITY,
+            'A data da despesa nao pode ser posterior ao fim da viagem.'
         );
     }
 }

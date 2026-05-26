@@ -1,0 +1,58 @@
+.recent-panel {
+  display: grid;
+  gap: 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 18px;
+  background: var(--surface);
+}
+
+header,
+.trip-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+header span,
+.trip-row span,
+time,
+p {
+  color: var(--muted);
+}
+
+header span {
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+h2 {
+  margin: 3px 0 0;
+  font-size: 1.35rem;
+}
+
+.trip-list {
+  display: grid;
+}
+
+.trip-row {
+  border-top: 1px solid var(--border);
+  padding: 13px 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.trip-row div {
+  display: grid;
+  gap: 4px;
+}
+
+time {
+  white-space: nowrap;
+}
+
+p {
+  margin: 0;
+}

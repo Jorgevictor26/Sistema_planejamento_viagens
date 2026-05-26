@@ -13,6 +13,7 @@ export class AuthService {
   private readonly tokenKey = 'travel_planner_token';
 
   readonly currentUser = signal<User | null>(null);
+  readonly sessionExpired = signal(false);
 
   login(payload: LoginPayload): Observable<ApiResponse<AuthData>> {
     return this.http.post<ApiResponse<AuthData>>(`${environment.apiUrl}/login`, payload).pipe(
@@ -51,14 +52,32 @@ export class AuthService {
     return Boolean(this.token());
   }
 
+  expireSession(): void {
+    if (this.sessionExpired()) {
+      return;
+    }
+
+    this.clearSession(false);
+    this.sessionExpired.set(true);
+  }
+
+  acknowledgeSessionExpired(): void {
+    this.sessionExpired.set(false);
+    void this.router.navigate(['/login']);
+  }
+
   private persistSession(data: AuthData): void {
     localStorage.setItem(this.tokenKey, data.authorization.token);
     this.currentUser.set(data.user);
+    this.sessionExpired.set(false);
   }
 
-  private clearSession(): void {
+  private clearSession(redirect = true): void {
     localStorage.removeItem(this.tokenKey);
     this.currentUser.set(null);
-    void this.router.navigate(['/login']);
+
+    if (redirect) {
+      void this.router.navigate(['/login']);
+    }
   }
 }

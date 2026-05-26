@@ -48,4 +48,14 @@ return [
         'lang' => env('OPENWEATHER_LANG', 'pt_br'),
     ],
 
+    'geoapify' => [
+        'base_url' => env('GEOAPIFY_BASE_URL', 'https://api.geoapify.com'),
+        'key' => env('GEOAPIFY_KEY'),
+    ],
+
+    'opentripmap' => [
+        'base_url' => env('OPENTRIPMAP_BASE_URL', 'https://api.opentripmap.com'),
+        'key' => env('OPENTRIPMAP_KEY'),
+    ],
+
 ];

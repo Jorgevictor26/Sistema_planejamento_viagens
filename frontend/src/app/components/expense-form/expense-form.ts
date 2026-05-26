@@ -2,8 +2,10 @@ import { Component, effect, inject, input, output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatNativeDateModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 
 import { Expense, ExpenseCategory, ExpensePayload, expenseCategories } from '../../services/expense.service';
@@ -11,7 +13,7 @@ import { Trip } from '../../services/trip.service';
 
 @Component({
   selector: 'app-expense-form',
-  imports: [ReactiveFormsModule, MatButtonModule, MatCardModule, MatFormFieldModule, MatInputModule, MatSelectModule],
+  imports: [ReactiveFormsModule, MatButtonModule, MatCardModule, MatDatepickerModule, MatFormFieldModule, MatInputModule, MatNativeDateModule, MatSelectModule],
   templateUrl: './expense-form.html',
   styleUrl: './expense-form.scss',
 })
@@ -29,9 +31,9 @@ export class ExpenseForm {
   readonly form = this.fb.nonNullable.group({
     trip_id: [0, [Validators.required, Validators.min(1)]],
     category: ['hotel' as ExpenseCategory, [Validators.required]],
-    amount: [0, [Validators.required, Validators.min(0)]],
+    amount: [0, [Validators.required, Validators.min(0.01)]],
     description: [''],
-    expense_date: [''],
+    expense_date: [null as Date | string | null],
   });
 
   constructor() {
@@ -47,7 +49,7 @@ export class ExpenseForm {
         category: expense.category,
         amount: Number(expense.amount),
         description: expense.description || '',
-        expense_date: expense.expense_date ? expense.expense_date.slice(0, 10) : '',
+        expense_date: this.toDateValue(expense.expense_date),
       });
     });
   }
@@ -65,15 +67,32 @@ export class ExpenseForm {
       category: raw.category,
       amount: Number(raw.amount),
       description: raw.description || null,
-      expense_date: raw.expense_date || null,
+      expense_date: this.toDatePayload(raw.expense_date),
     });
 
     if (!this.expense()) {
       this.form.patchValue({
         amount: 0,
         description: '',
-        expense_date: '',
+        expense_date: null,
       });
     }
+  }
+
+  private toDateValue(value: string | null): Date | null {
+    return value ? new Date(`${value}T00:00:00`) : null;
+  }
+
+  private toDatePayload(value: Date | string | null | undefined): string | null {
+    if (!value) {
+      return null;
+    }
+
+    if (typeof value === 'string') {
+      return value.slice(0, 10);
+    }
+
+    const offsetDate = new Date(value.getTime() - value.getTimezoneOffset() * 60000);
+    return offsetDate.toISOString().slice(0, 10);
   }
 }

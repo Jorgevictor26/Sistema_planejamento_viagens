@@ -6,8 +6,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Router, RouterLink } from '@angular/router';
 
-import { ThemeToggle } from '../../shared/theme-toggle/theme-toggle';
 import { AuthService } from '../../services/auth.service';
+import { LanguageToggle } from '../../shared/language-toggle/language-toggle';
+import { ThemeToggle } from '../../shared/theme-toggle/theme-toggle';
 
 @Component({
   selector: 'app-login-page',
@@ -18,6 +19,7 @@ import { AuthService } from '../../services/auth.service';
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
+    LanguageToggle,
     ThemeToggle,
   ],
   templateUrl: './login.html',
@@ -48,7 +50,7 @@ export class LoginPage {
     this.auth.login(this.form.getRawValue()).subscribe({
       next: () => void this.router.navigate(['/dashboard']),
       error: (error) => {
-        this.error.set(error.error?.message || 'Nao foi possivel entrar.');
+        this.error.set(error.error?.message || 'Email ou senha incorretos.');
         this.loading.set(false);
       },
     });

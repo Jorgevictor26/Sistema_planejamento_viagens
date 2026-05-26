@@ -1,30 +1,34 @@
-<nav class="navbar">
+<nav class="navbar" [class.scrolled]="scrolled()" [class.menu-open]="menuOpen()">
   <a class="brand" routerLink="/">
-    <span>TV</span>
-    TravelVista
+    <span aria-hidden="true">T</span>
+    <strong>Travel Planner</strong>
   </a>
 
-  <div class="links">
-    <a routerLink="/">{{ language.t('navHome') }}</a>
-    <a routerLink="/trips">{{ language.t('navTrips') }}</a>
-    <a routerLink="/expenses">Despesas</a>
-    <a routerLink="/itinerary">Roteiro</a>
-    <a routerLink="/favorites">Favoritos</a>
-    <a routerLink="/dashboard">Dashboard</a>
-  </div>
+  <button class="menu-button" type="button" aria-label="Abrir menu" (click)="menuOpen.set(!menuOpen())">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
 
-  <div class="actions">
-    <select [value]="language.language()" (change)="language.setLanguage($any($event.target).value)">
-      <option value="pt">PT</option>
-      <option value="en">EN</option>
-      <option value="fr">FR</option>
-    </select>
-    <app-theme-toggle />
-    @if (auth.isAuthenticated()) {
-      <button mat-stroked-button type="button" (click)="auth.logout()">Sair</button>
-    } @else {
-      <a mat-button routerLink="/login">{{ language.t('navLogin') }}</a>
-      <a mat-flat-button color="primary" routerLink="/register">{{ language.t('navRegister') }}</a>
-    }
+  <div class="nav-panel">
+    <div class="links">
+      <a href="#destinos" (click)="closeMenu()">{{ language.t('navExplore') }}</a>
+      <a href="#sobre" (click)="closeMenu()">{{ language.t('navAbout') }}</a>
+    </div>
+
+    <div class="actions">
+      <select [value]="language.language()" aria-label="Idioma" (change)="language.setLanguage($any($event.target).value)">
+        <option value="pt">PT</option>
+        <option value="en">EN</option>
+      </select>
+      <app-theme-toggle />
+      @if (auth.isAuthenticated()) {
+        <a mat-button routerLink="/dashboard" (click)="closeMenu()">Dashboard</a>
+        <a mat-flat-button color="primary" routerLink="/trips" (click)="closeMenu()">Minhas viagens</a>
+      } @else {
+        <a mat-button routerLink="/login" (click)="closeMenu()">{{ language.t('navLogin') }}</a>
+        <button mat-flat-button color="primary" type="button" (click)="openAuthModal()">{{ language.t('navRegister') }}</button>
+      }
+    </div>
   </div>
 </nav>

@@ -1,11 +1,23 @@
 <section class="hero">
+  <div class="hero-overlay"></div>
+
   <div class="hero-copy">
-    <span class="eyebrow">TravelVista</span>
+    <span class="eyebrow">{{ language.t('heroEyebrow') }}</span>
     <h1>{{ language.t('heroTitle') }}</h1>
     <p>{{ language.t('heroText') }}</p>
+
+    <div class="hero-actions">
+      <button mat-flat-button color="primary" type="button" (click)="authRequested.emit()">{{ language.t('heroStart') }}</button>
+      <button class="explore-button" mat-stroked-button type="button" (click)="exploreDestinations()">{{ language.t('heroExplore') }}</button>
+    </div>
   </div>
 
   <form class="search-box" (ngSubmit)="saveDestination()">
+    <div class="search-heading">
+      <strong>{{ language.t('searchTitle') }}</strong>
+      <span>{{ language.t('searchText') }}</span>
+    </div>
+
     <mat-form-field appearance="outline">
       <mat-label>{{ language.t('searchLabel') }}</mat-label>
       <input
@@ -21,7 +33,7 @@
           <mat-option [value]="city">
             <div class="option">
               <strong>{{ city.name }}, {{ city.country }}</strong>
-              <span>{{ city.region }} · {{ city.latitude }}, {{ city.longitude }}</span>
+              <span>{{ city.region }} · coordenadas guardadas automaticamente</span>
             </div>
           </mat-option>
         }
@@ -29,7 +41,7 @@
     </mat-form-field>
 
     <button mat-flat-button color="primary" type="submit" [disabled]="!canSave()">
-      Guardar destino
+      {{ selectedCity() ? language.t('searchReady') : language.t('searchSelect') }}
     </button>
 
     <p class="hint">{{ error() || language.t('searchHint') }}</p>

@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -8,7 +8,6 @@ import { MatSelectModule } from '@angular/material/select';
 
 import { ItineraryForm } from '../../components/itinerary-form/itinerary-form';
 import { ItineraryList } from '../../components/itinerary-list/itinerary-list';
-import { Navbar } from '../../components/navbar/navbar';
 import { Timeline } from '../../components/timeline/timeline';
 import { Itinerary, ItineraryPayload, ItineraryService, PaginatedItineraries } from '../../services/itinerary.service';
 import { Trip, TripService } from '../../services/trip.service';
@@ -22,7 +21,6 @@ import { Trip, TripService } from '../../services/trip.service';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    Navbar,
     ItineraryForm,
     ItineraryList,
     Timeline,
@@ -42,6 +40,8 @@ export class ItineraryPage {
   readonly loading = signal(false);
   readonly saving = signal(false);
   readonly error = signal('');
+  readonly totalDays = computed(() => new Set(this.items().map((item) => item.day)).size);
+  readonly scheduledItems = computed(() => this.items().filter((item) => item.time).length);
 
   readonly filters = this.fb.nonNullable.group({
     trip_id: [''],

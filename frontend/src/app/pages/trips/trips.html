@@ -1,52 +1,27 @@
-<app-navbar />
-
 <main class="trips-shell">
   <header class="page-head">
     <div>
       <span class="eyebrow">Viagens</span>
-      <h1>Planejamento de viagens</h1>
+      <h1>As suas aventuras organizadas num só lugar.</h1>
     </div>
     <a mat-flat-button color="primary" routerLink="/trips/new">Nova viagem</a>
   </header>
 
   <mat-card class="filters-card" appearance="outlined">
     <form [formGroup]="filters" (ngSubmit)="load()">
-      <mat-form-field appearance="outline">
-        <mat-label>Pesquisar</mat-label>
-        <input matInput formControlName="q" placeholder="Cidade ou pais">
+      <mat-form-field class="country-field" appearance="outline">
+        <mat-label>País</mat-label>
+        <input matInput formControlName="country" placeholder="Ex.: Angola">
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Pais</mat-label>
-        <input matInput formControlName="country">
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>De</mat-label>
-        <input matInput type="date" formControlName="from">
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Ate</mat-label>
-        <input matInput type="date" formControlName="to">
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Ordenar por</mat-label>
-        <mat-select formControlName="sort">
-          <mat-option value="created_at">Criacao</mat-option>
-          <mat-option value="start_date">Data inicial</mat-option>
-          <mat-option value="budget">Orcamento</mat-option>
-          <mat-option value="destination_city">Destino</mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Direcao</mat-label>
-        <mat-select formControlName="direction">
-          <mat-option value="desc">Decrescente</mat-option>
-          <mat-option value="asc">Crescente</mat-option>
-        </mat-select>
+      <mat-form-field class="period-field" appearance="outline">
+        <mat-label>Período</mat-label>
+        <mat-date-range-input [rangePicker]="periodPicker">
+          <input matStartDate formControlName="from" placeholder="Data inicial">
+          <input matEndDate formControlName="to" placeholder="Data final">
+        </mat-date-range-input>
+        <mat-datepicker-toggle matIconSuffix [for]="periodPicker" />
+        <mat-date-range-picker #periodPicker />
       </mat-form-field>
 
       <div class="filter-actions">
@@ -63,10 +38,12 @@
   <app-trip-list [trips]="trips()" [loading]="loading()" (removed)="deleteTrip($event)" />
 
   @if (pagination(); as page) {
+    @if (page.last_page > 1) {
     <nav class="pager" aria-label="Paginacao">
       <button mat-stroked-button type="button" [disabled]="!page.prev_page_url" (click)="load(page.current_page - 1)">Anterior</button>
       <span>Pagina {{ page.current_page }} de {{ page.last_page }}</span>
       <button mat-stroked-button type="button" [disabled]="!page.next_page_url" (click)="load(page.current_page + 1)">Proxima</button>
     </nav>
+    }
   }
 </main>

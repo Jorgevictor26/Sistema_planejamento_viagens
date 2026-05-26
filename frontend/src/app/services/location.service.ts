@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 import { ApiResponse } from '../core/models/auth.models';
+import { LanguageService } from './language.service';
 
 export interface CityResult {
   type: 'city' | 'country';
@@ -33,9 +34,22 @@ export interface WeatherResult {
   icon: string | null;
 }
 
+export interface PlaceResult {
+  id: string | null;
+  name: string | null;
+  category: string | null;
+  rating: number | null;
+  distance: number | null;
+  address: string | null;
+  image: string | null;
+}
+
+export type PlaceType = 'hotels' | 'restaurants' | 'services' | 'attractions';
+
 @Injectable({ providedIn: 'root' })
 export class LocationService {
   private readonly http = inject(HttpClient);
+  private readonly language = inject(LanguageService);
 
   searchDestinations(query: string): Observable<ApiResponse<CityResult[]>> {
     const params = new HttpParams().set('q', query);
@@ -47,5 +61,17 @@ export class LocationService {
     const params = new HttpParams().set('lat', lat).set('lon', lon);
 
     return this.http.get<ApiResponse<WeatherResult>>(`${environment.apiUrl}/weather`, { params });
+  }
+
+  nearbyPlaces(lat: number, lon: number): Observable<ApiResponse<PlaceResult[]>> {
+    const params = new HttpParams().set('lat', lat).set('lon', lon).set('lang', this.language.language());
+
+    return this.http.get<ApiResponse<PlaceResult[]>>(`${environment.apiUrl}/places/nearby`, { params });
+  }
+
+  places(lat: number, lon: number, type: PlaceType): Observable<ApiResponse<PlaceResult[]>> {
+    const params = new HttpParams().set('lat', lat).set('lon', lon).set('type', type);
+
+    return this.http.get<ApiResponse<PlaceResult[]>>(`${environment.apiUrl}/places`, { params });
   }
 }

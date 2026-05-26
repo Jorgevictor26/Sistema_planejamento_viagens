@@ -2,13 +2,12 @@ import { Component, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { Router, RouterLink } from '@angular/router';
 
-import { Navbar } from '../../components/navbar/navbar';
 import { TripForm } from '../../components/trip-form/trip-form';
 import { TripPayload, TripService } from '../../services/trip.service';
 
 @Component({
   selector: 'app-create-trip-page',
-  imports: [RouterLink, MatButtonModule, Navbar, TripForm],
+  imports: [RouterLink, MatButtonModule, TripForm],
   templateUrl: './create-trip.html',
   styleUrl: './create-trip.scss',
 })
@@ -26,7 +25,11 @@ export class CreateTripPage {
     this.trips.create(payload).subscribe({
       next: (response) => void this.router.navigate(['/trips', response.data.id]),
       error: (error) => {
-        this.error.set(error.error?.message || 'Nao foi possivel criar a viagem.');
+        const details = error.error?.errors
+          ? Object.values(error.error.errors).flat().join(' ')
+          : '';
+
+        this.error.set(details || error.error?.message || 'Nao foi possivel criar a viagem. Confira os campos obrigatorios e tente novamente.');
         this.loading.set(false);
       },
     });

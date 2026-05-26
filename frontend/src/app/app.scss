@@ -1,0 +1,46 @@
+.session-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(15, 23, 42, 0.48);
+  backdrop-filter: blur(6px);
+}
+
+.session-modal {
+  width: min(420px, 100%);
+  border: 1px solid color-mix(in srgb, var(--accent) 18%, var(--border));
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 28px 80px rgba(15, 23, 42, 0.28);
+  padding: 26px;
+}
+
+.session-modal h2 {
+  margin: 0 0 10px;
+  font-size: 1.35rem;
+  font-weight: 900;
+}
+
+.session-modal p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.session-modal button {
+  min-height: 44px;
+  width: 100%;
+  margin-top: 22px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--accent);
+  color: var(--accent-contrast);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 900;
+  box-shadow: var(--button-shadow);
+}

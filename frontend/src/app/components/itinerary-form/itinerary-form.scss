@@ -1,17 +1,22 @@
 .itinerary-form-card {
+  border: 1px solid color-mix(in srgb, var(--accent) 18%, var(--border));
   border-radius: 8px;
-  background: var(--surface);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--accent) 6%, transparent), transparent 42%),
+    var(--surface);
+  box-shadow: 0 18px 48px rgba(15, 23, 42, 0.08);
 }
 
 form {
   display: grid;
-  grid-template-columns: repeat(4, minmax(140px, 1fr));
-  gap: 14px;
-  padding: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  padding: clamp(18px, 3vw, 26px);
 }
 
 .wide,
-.examples {
+.examples,
+.actions {
   grid-column: span 2;
 }
 
@@ -21,6 +26,117 @@ form {
   align-items: center;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+.time-control {
+  display: grid;
+  gap: 10px;
+}
+
+.time-control > span {
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.time-picker {
+  display: grid;
+  gap: 10px;
+}
+
+.time-fields {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 12px;
+  border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--border));
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--surface) 88%, var(--surface-alt));
+}
+
+.time-fields:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+.time-fields select {
+  height: 34px;
+  min-width: 58px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-weight: 800;
+  padding: 0 8px;
+}
+
+.time-fields select:focus {
+  outline: 0;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+.time-fields > span {
+  color: var(--text);
+  font-size: 1.2rem;
+  font-weight: 900;
+}
+
+.period-toggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.period-toggle button {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 900;
+}
+
+.period-toggle button {
+  min-width: 34px;
+  border-radius: 6px !important;
+  padding: 6px 4px;
+}
+
+.period-toggle button.active {
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+
+.time-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.time-presets button {
+  min-height: 36px;
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--border));
+  border-radius: 999px !important;
+  padding: 0 12px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 900;
+  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, color 180ms ease;
+}
+
+.time-presets button:hover,
+.time-presets button.active {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  box-shadow: var(--button-shadow);
+  transform: translateY(-1px);
 }
 
 @media (max-width: 960px) {
@@ -34,8 +150,24 @@ form {
     grid-template-columns: 1fr;
   }
 
+  .time-fields {
+    align-items: stretch;
+    flex-wrap: wrap;
+    padding: 10px;
+  }
+
+  .period-toggle {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .period-toggle button {
+    flex: 1;
+  }
+
   .wide,
-  .examples {
+  .examples,
+  .actions {
     grid-column: auto;
   }
 }

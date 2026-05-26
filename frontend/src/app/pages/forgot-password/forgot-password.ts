@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
 
 import { AuthService } from '../../services/auth.service';
+import { LanguageToggle } from '../../shared/language-toggle/language-toggle';
 import { ThemeToggle } from '../../shared/theme-toggle/theme-toggle';
 
 @Component({
@@ -18,6 +19,7 @@ import { ThemeToggle } from '../../shared/theme-toggle/theme-toggle';
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
+    LanguageToggle,
     ThemeToggle,
   ],
   templateUrl: './forgot-password.html',
@@ -45,7 +47,10 @@ export class ForgotPasswordPage {
 
     this.auth.forgotPassword(this.form.controls.email.value).subscribe({
       next: (response) => this.feedback.set(response.message),
-      error: (error) => this.feedback.set(error.error?.message || 'Nao foi possivel enviar o link.'),
+      error: (error) => {
+        this.feedback.set(error.error?.message || 'Nao foi possivel enviar o link de recuperacao.');
+        this.loading.set(false);
+      },
       complete: () => this.loading.set(false),
     });
   }

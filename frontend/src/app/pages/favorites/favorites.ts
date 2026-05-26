@@ -7,7 +7,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 
 import { FavoriteList } from '../../components/favorite-list/favorite-list';
-import { Navbar } from '../../components/navbar/navbar';
 import { Favorite, FavoritePayload, FavoriteService, favoriteTypes } from '../../services/favorite.service';
 
 @Component({
@@ -19,7 +18,6 @@ import { Favorite, FavoritePayload, FavoriteService, favoriteTypes } from '../..
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    Navbar,
     FavoriteList,
   ],
   templateUrl: './favorites.html',

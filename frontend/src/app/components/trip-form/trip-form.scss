@@ -9,6 +9,113 @@ form {
   padding: 20px;
 }
 
+.form-intro {
+  display: grid;
+  gap: 6px;
+}
+
+.form-intro span {
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.form-intro h2,
+.form-intro p {
+  margin: 0;
+}
+
+.form-intro h2 {
+  font-size: clamp(1.5rem, 3vw, 2.3rem);
+  line-height: 1.08;
+}
+
+.form-intro p,
+.destination-preview small,
+.option span {
+  color: var(--muted);
+}
+
+.destination-preview {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.45fr) minmax(320px, 1.55fr);
+  gap: 16px;
+  align-items: stretch;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+  background: var(--surface-alt);
+}
+
+.destination-preview > div {
+  display: grid;
+  align-content: center;
+  gap: 8px;
+}
+
+.destination-preview span {
+  color: var(--accent);
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.destination-preview strong {
+  font-size: 1.35rem;
+}
+
+.destination-preview app-weather-widget {
+  display: block;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.destination-preview ::ng-deep .insights {
+  padding: 0;
+  background: transparent;
+}
+
+.destination-preview ::ng-deep .section-heading {
+  display: none;
+}
+
+.destination-preview ::ng-deep .insight-grid {
+  grid-template-columns: minmax(220px, 0.9fr) minmax(280px, 1.1fr);
+  gap: 12px;
+}
+
+.destination-preview ::ng-deep .weather-card {
+  min-height: 100%;
+}
+
+.destination-preview ::ng-deep .temperature strong {
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.destination-preview ::ng-deep .places {
+  margin-top: 14px;
+}
+
+.destination-preview ::ng-deep .place-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.destination-preview ::ng-deep .place-card img {
+  aspect-ratio: 16 / 8;
+}
+
+.option {
+  display: grid;
+  gap: 2px;
+}
+
+.error {
+  margin: 0;
+  color: var(--danger);
+  font-weight: 800;
+}
+
 .form-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -30,7 +137,13 @@ mat-form-field {
 }
 
 @media (max-width: 720px) {
-  .form-grid {
+  .form-grid,
+  .destination-preview {
+    grid-template-columns: 1fr;
+  }
+
+  .destination-preview ::ng-deep .insight-grid,
+  .destination-preview ::ng-deep .place-grid {
     grid-template-columns: 1fr;
   }
 

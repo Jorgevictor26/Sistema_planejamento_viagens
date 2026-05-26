@@ -1,0 +1,21 @@
+<section class="stats-grid">
+  <article>
+    <span>Total de viagens</span>
+    <strong>{{ stats()?.total_trips || 0 }}</strong>
+  </article>
+
+  <article>
+    <span>Total gasto</span>
+    <strong>{{ currency.format(stats()?.total_spent || 0, 2) }}</strong>
+  </article>
+
+  <article>
+    <span>Destinos populares</span>
+    <strong>{{ stats()?.popular_destinations?.length || 0 }}</strong>
+  </article>
+
+  <article>
+    <span>Favoritos</span>
+    <strong>{{ favoritesCount() }}</strong>
+  </article>
+</section>

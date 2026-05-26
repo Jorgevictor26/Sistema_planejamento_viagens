@@ -13,6 +13,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
+use Throwable;
 use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
@@ -33,7 +34,7 @@ class AuthController extends Controller
         $token = Auth::guard('api')->attempt($request->validated());
 
         if (! $token) {
-            return $this->error('Credenciais invalidas.', Response::HTTP_UNAUTHORIZED);
+            return $this->error('Email ou senha incorretos.', Response::HTTP_UNAUTHORIZED);
         }
 
         return $this->success('Login realizado com sucesso.', [
@@ -58,7 +59,11 @@ class AuthController extends Controller
 
     public function forgotPassword(ForgotPasswordRequest $request): JsonResponse
     {
-        $status = Password::sendResetLink($request->validated());
+        try {
+            $status = Password::sendResetLink($request->validated());
+        } catch (Throwable) {
+            return $this->error('Nao foi possivel enviar o email de recuperacao. Verifique a configuracao de email do servidor.', Response::HTTP_SERVICE_UNAVAILABLE);
+        }
 
         if ($status !== Password::RESET_LINK_SENT) {
             return $this->error(__($status), Response::HTTP_BAD_REQUEST);

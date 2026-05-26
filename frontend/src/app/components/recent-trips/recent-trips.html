@@ -1,0 +1,25 @@
+<section class="recent-panel">
+  <header>
+    <div>
+      <span>Proximas viagens</span>
+      <h2>Agenda recente</h2>
+    </div>
+    <a mat-stroked-button routerLink="/trips">Ver todas</a>
+  </header>
+
+  @if (trips().length) {
+    <div class="trip-list">
+      @for (trip of trips(); track trip.id) {
+        <a class="trip-row" [routerLink]="['/trips', trip.id]">
+          <div>
+            <strong>{{ trip.destination_city }}</strong>
+            <span>{{ trip.destination_country }}</span>
+          </div>
+          <time>{{ trip.start_date ? (trip.start_date | date:'dd/MM/yyyy') : 'Sem data' }}</time>
+        </a>
+      }
+    </div>
+  } @else {
+    <p>Nenhuma viagem cadastrada ainda.</p>
+  }
+</section>

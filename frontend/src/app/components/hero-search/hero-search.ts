@@ -13,30 +13,6 @@ import { CityResult, LocationService } from '../../services/location.service';
 const curatedCities: CityResult[] = [
   {
     type: 'city',
-    id: 'curated-london',
-    name: 'London',
-    city: 'London',
-    country: 'UK',
-    country_code: 'UK',
-    region: 'England',
-    latitude: 51.5074,
-    longitude: -0.1278,
-    population: 8982000,
-  },
-  {
-    type: 'city',
-    id: 'curated-long-beach',
-    name: 'Long Beach',
-    city: 'Long Beach',
-    country: 'USA',
-    country_code: 'USA',
-    region: 'California',
-    latitude: 33.7701,
-    longitude: -118.1937,
-    population: 451307,
-  },
-  {
-    type: 'city',
     id: 'curated-luanda',
     name: 'Luanda',
     city: 'Luanda',
@@ -46,6 +22,30 @@ const curatedCities: CityResult[] = [
     latitude: -8.839,
     longitude: 13.2894,
     population: 2571861,
+  },
+  {
+    type: 'city',
+    id: 'curated-cape-town',
+    name: 'Cape Town',
+    city: 'Cape Town',
+    country: 'South Africa',
+    country_code: 'ZA',
+    region: 'Western Cape',
+    latitude: -33.9249,
+    longitude: 18.4241,
+    population: 433688,
+  },
+  {
+    type: 'city',
+    id: 'curated-cabo-ledo',
+    name: 'Cabo Ledo',
+    city: 'Cabo Ledo',
+    country: 'Angola',
+    country_code: 'AO',
+    region: 'Bengo',
+    latitude: -9.6717,
+    longitude: 13.2326,
+    population: null,
   },
 ];
 
@@ -67,6 +67,7 @@ export class HeroSearch {
   readonly language = inject(LanguageService);
 
   readonly destinationSelected = output<CityResult>();
+  readonly authRequested = output<void>();
   readonly selectedCity = signal<CityResult | null>(null);
   readonly error = signal('');
   readonly searchControl = new FormControl<string | CityResult>('', { nonNullable: true });
@@ -99,6 +100,7 @@ export class HeroSearch {
 
   chooseCity(city: CityResult): void {
     this.selectedCity.set(city);
+    this.searchControl.setValue(city, { emitEvent: false });
     this.error.set('');
   }
 
@@ -106,7 +108,9 @@ export class HeroSearch {
     const city = this.selectedCity();
 
     if (!city) {
-      this.error.set('Escolha uma cidade sugerida antes de continuar.');
+      this.error.set(this.language.language() === 'en'
+        ? 'Choose a suggested city before continuing.'
+        : 'Escolha uma cidade sugerida antes de continuar.');
       return;
     }
 
@@ -120,10 +124,18 @@ export class HeroSearch {
     this.destinationSelected.emit(city);
   }
 
+  exploreDestinations(): void {
+    document.getElementById('destinos')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
   private cityOnlySuggestions(query: string, results: CityResult[]): CityResult[] {
     const cities = results.filter((item) => item.type === 'city' && item.latitude !== null && item.longitude !== null);
     const normalizedQuery = query.toLowerCase();
-    const curated = normalizedQuery.startsWith('lon') ? curatedCities : [];
+    const curated = curatedCities.filter((city) => {
+      const haystack = `${city.name} ${city.country} ${city.region}`.toLowerCase();
+
+      return haystack.includes(normalizedQuery);
+    });
     const merged = [...curated, ...cities];
     const seen = new Set<string>();
 

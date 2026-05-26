@@ -1,18 +1,29 @@
+<header class="auth-header">
+  <a class="brand" routerLink="/">
+    <span class="brand-mark">T</span>
+    <strong>Travel Planner</strong>
+  </a>
+
+  <div class="auth-tools">
+    <app-language-toggle />
+    <app-theme-toggle />
+  </div>
+</header>
+
 <main class="auth-shell">
-  <section class="auth-copy">
-    <div class="brand-row">
-      <span class="brand-mark">TV</span>
-      <app-theme-toggle />
+  <section class="auth-visual">
+    <div class="photo-panel" role="img" aria-label="Viajante observando uma paisagem costeira">
+      <div class="photo-copy">
+        <span>Angola, África e mundo</span>
+        <h1>Planeje viagens com contexto real.</h1>
+        <p>Pesquise destinos, veja mapa e clima, descubra lugares próximos e mantenha todos os detalhes organizados.</p>
+      </div>
     </div>
-    <h1>Planeje viagens com contexto real.</h1>
-    <p>Descubra cidades, confira o clima antes de decidir e organize cada partida com mais clareza.</p>
-    <div class="travel-photo" role="img" aria-label="Paisagem de viagem ao entardecer"></div>
   </section>
 
   <mat-card class="auth-card" appearance="outlined">
     <mat-card-header>
-      <mat-card-title>Entrar</mat-card-title>
-      <mat-card-subtitle>Acesse sua conta</mat-card-subtitle>
+      <mat-card-title>Bem-vindo de volta!</mat-card-title>
     </mat-card-header>
 
     <mat-card-content>
@@ -44,8 +55,8 @@
     </mat-card-content>
 
     <mat-card-actions>
-      <a routerLink="/forgot-password">Esqueci a senha</a>
-      <a routerLink="/register">Criar conta</a>
+      <a class="forgot-link" routerLink="/forgot-password">Esqueci a senha</a>
+      <a class="register-link" routerLink="/register">Criar conta</a>
     </mat-card-actions>
   </mat-card>
 </main>

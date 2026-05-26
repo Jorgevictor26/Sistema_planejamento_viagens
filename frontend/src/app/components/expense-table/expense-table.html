@@ -17,11 +17,11 @@
         @for (expense of expenses(); track expense.id) {
           <tr>
             <td>{{ expense.trip?.destination_city || 'Viagem' }}</td>
-            <td>{{ expense.category }}</td>
-            <td>{{ +expense.amount | currency:'USD':'symbol':'1.2-2' }}</td>
+            <td><span class="category-pill">{{ expense.category }}</span></td>
+            <td><strong>{{ +expense.amount | currency:'AOA':'symbol':'1.2-2' }}</strong></td>
             <td>{{ expense.expense_date ? (expense.expense_date | date:'dd/MM/yyyy') : 'Sem data' }}</td>
             <td>{{ expense.description || '-' }}</td>
-            <td>
+            <td class="row-actions">
               <button mat-button type="button" (click)="edited.emit(expense)">Editar</button>
               <button mat-button type="button" (click)="removed.emit(expense.id)">Excluir</button>
             </td>

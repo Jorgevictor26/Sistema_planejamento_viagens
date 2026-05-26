@@ -1,7 +1,7 @@
 .trip-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  gap: 14px;
 }
 
 .state {
@@ -12,4 +12,10 @@
   border-radius: 8px;
   color: var(--muted);
   background: color-mix(in srgb, var(--surface) 82%, transparent);
+}
+
+@media (max-width: 640px) {
+  .trip-grid {
+    grid-template-columns: 1fr;
+  }
 }

@@ -1,10 +1,9 @@
-<app-navbar />
-
 <main class="expenses-shell">
   <header class="page-head">
     <div>
-      <span class="eyebrow">Financas</span>
-      <h1>Despesas da viagem</h1>
+      <span class="eyebrow">Finanças</span>
+      <h1>Controle os gastos da viagem com clareza.</h1>
+      <p>Acompanhe despesas, orçamento e saldo em uma visão organizada por viagem e categoria.</p>
     </div>
   </header>
 
@@ -12,19 +11,64 @@
     <p class="error">{{ error() }}</p>
   }
 
-  <section class="top-grid">
-    <app-expense-form
-      [trips]="trips()"
-      [expense]="editing()"
-      [loading]="saving()"
-      (submitted)="save($event)"
-      (cancelled)="editing.set(null)"
-    />
+  <section class="finance-overview" aria-label="Resumo financeiro">
+    <div>
+      <span>Viagem</span>
+      <strong>
+        @if (selectedTrip(); as trip) {
+          {{ trip.destination_city }} - {{ trip.destination_country }}
+        } @else {
+          Todas
+        }
+      </strong>
+    </div>
+    <div>
+      <span>Gasto filtrado</span>
+      <strong>{{ currency.format(selectedSpent(), 2) }}</strong>
+    </div>
+    <div>
+      <span>Orçamento</span>
+      <strong>{{ selectedBudget() === null ? 'Sem orçamento' : currency.format(selectedBudget()!, 2) }}</strong>
+    </div>
+    <div>
+      <span>Saldo</span>
+      <strong [class.negative]="selectedRemaining() !== null && selectedRemaining()! < 0">
+        {{ selectedRemaining() === null ? 'Escolha uma viagem' : currency.format(selectedRemaining()!, 2) }}
+      </strong>
+    </div>
+  </section>
 
-    <app-expense-chart [expenses]="items()" [budget]="selectedBudget()" />
+  <section class="top-grid">
+    <section class="expenses-panel">
+      <div class="section-head">
+        <span>{{ editing() ? 'Editar despesa' : 'Nova despesa' }}</span>
+        <strong>{{ saving() ? 'Salvando...' : 'Adicionar gasto' }}</strong>
+      </div>
+      <app-expense-form
+        [trips]="trips()"
+        [expense]="editing()"
+        [loading]="saving()"
+        (submitted)="save($event)"
+        (cancelled)="editing.set(null)"
+      />
+    </section>
+
+    <section class="expenses-panel">
+      <div class="section-head">
+        <span>Análise</span>
+        <strong>{{ items().length }} despesa(s)</strong>
+      </div>
+      <app-expense-chart [expenses]="items()" [budget]="selectedBudget()" />
+    </section>
   </section>
 
   <mat-card class="filters-card" appearance="outlined">
+    <div class="filters-title">
+      <div>
+        <span class="eyebrow">Filtros</span>
+        <strong>Filtrar lista</strong>
+      </div>
+    </div>
     <form [formGroup]="filters" (ngSubmit)="loadExpenses()">
       <mat-form-field appearance="outline">
         <mat-label>Viagem</mat-label>
@@ -48,12 +92,16 @@
 
       <mat-form-field appearance="outline">
         <mat-label>De</mat-label>
-        <input matInput type="date" formControlName="from">
+        <input matInput [matDatepicker]="fromPicker" formControlName="from">
+        <mat-datepicker-toggle matIconSuffix [for]="fromPicker" />
+        <mat-datepicker #fromPicker />
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Ate</mat-label>
-        <input matInput type="date" formControlName="to">
+        <input matInput [matDatepicker]="toPicker" formControlName="to">
+        <mat-datepicker-toggle matIconSuffix [for]="toPicker" />
+        <mat-datepicker #toPicker />
       </mat-form-field>
 
       <div class="filter-actions">
@@ -63,12 +111,18 @@
     </form>
   </mat-card>
 
-  <app-expense-table
-    [expenses]="items()"
-    [loading]="loading()"
-    (edited)="editing.set($event)"
-    (removed)="deleteExpense($event)"
-  />
+  <section class="expenses-section">
+    <div class="section-head">
+      <span>Despesas cadastradas</span>
+      <strong>{{ items().length }} item(ns)</strong>
+    </div>
+    <app-expense-table
+      [expenses]="items()"
+      [loading]="loading()"
+      (edited)="editing.set($event)"
+      (removed)="deleteExpense($event)"
+    />
+  </section>
 
   @if (pagination(); as page) {
     <nav class="pager" aria-label="Paginacao">

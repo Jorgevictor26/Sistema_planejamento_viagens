@@ -2,7 +2,7 @@
   @if (days().length) {
     @for (day of days(); track day.day) {
       <div class="day">
-        <h2>Dia {{ day.day }}</h2>
+        <h2><span>Dia {{ day.day }}</span><strong>{{ day.items.length }} atividade(s)</strong></h2>
         <div class="items">
           @for (item of day.items; track item.id) {
             <article>

@@ -1,10 +1,13 @@
 .timeline {
   display: grid;
-  gap: 18px;
-  border: 1px solid var(--border);
+  gap: 22px;
+  border: 1px solid color-mix(in srgb, var(--accent) 16%, var(--border));
   border-radius: 8px;
-  padding: 18px;
-  background: var(--surface);
+  padding: clamp(18px, 3vw, 26px);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--accent) 5%, transparent), transparent 40%),
+    var(--surface);
+  box-shadow: 0 18px 48px rgba(15, 23, 42, 0.08);
 }
 
 .day {
@@ -13,20 +16,34 @@
 }
 
 h2 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
   margin: 0;
+}
+
+h2 span {
   color: var(--accent);
   font-size: 1rem;
+  font-weight: 900;
+}
+
+h2 strong {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
 }
 
 .items {
   display: grid;
-  gap: 10px;
+  gap: 12px;
 }
 
 article {
   display: grid;
-  grid-template-columns: 58px 1fr;
-  gap: 12px;
+  grid-template-columns: 64px 1fr;
+  gap: 16px;
   position: relative;
 }
 
@@ -35,7 +52,7 @@ article::before {
   position: absolute;
   top: 8px;
   bottom: -14px;
-  left: 49px;
+  left: 55px;
   width: 1px;
   background: var(--border);
 }
@@ -45,14 +62,29 @@ article::before {
 }
 
 time {
-  color: var(--muted);
-  font-weight: 800;
+  display: grid;
+  width: 58px;
+  height: 42px;
+  place-items: center;
+  border-radius: 8px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 900;
 }
 
 article div {
   display: grid;
-  gap: 2px;
-  padding-bottom: 10px;
+  gap: 4px;
+  border: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
+  border-radius: 8px;
+  padding: 12px;
+  background: color-mix(in srgb, var(--surface) 92%, var(--surface-alt));
+  transition: border-color 180ms ease, transform 180ms ease;
+}
+
+article:hover div {
+  border-color: color-mix(in srgb, var(--accent) 28%, var(--border));
+  transform: translateX(2px);
 }
 
 span,
@@ -61,5 +93,11 @@ p {
 }
 
 p {
+  display: grid;
+  min-height: 180px;
+  place-items: center;
   margin: 0;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--surface) 86%, transparent);
 }

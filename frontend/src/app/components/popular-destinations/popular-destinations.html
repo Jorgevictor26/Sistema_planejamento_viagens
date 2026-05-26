@@ -1,11 +1,12 @@
-<section class="popular">
+<section class="popular" id="destinos">
   <div class="section-heading">
-    <span>Recomendacoes</span>
-    <h2>Destinos populares</h2>
+    <span>{{ language.t('popularEyebrow') }}</span>
+    <h2>{{ language.t('popularTitle') }}</h2>
+    <p>{{ language.t('popularText') }}</p>
   </div>
 
   <div class="grid">
-    @for (destination of destinations; track destination.id) {
+    @for (destination of destinations(); track destination.id) {
       <app-destination-card [destination]="destination" (selected)="selected.emit($event)" />
     }
   </div>

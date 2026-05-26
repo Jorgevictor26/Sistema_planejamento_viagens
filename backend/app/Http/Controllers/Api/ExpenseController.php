@@ -52,7 +52,7 @@ class ExpenseController extends Controller
         return $request->validate([
             'trip_id' => [$required, 'integer', 'exists:trips,id'],
             'category' => [$required, 'string', Rule::in(Expense::CATEGORIES)],
-            'amount' => [$required, 'numeric', 'min:0'],
+            'amount' => [$required, 'numeric', 'gt:0'],
             'description' => ['nullable', 'string', 'max:255'],
             'expense_date' => ['nullable', 'date'],
         ]);

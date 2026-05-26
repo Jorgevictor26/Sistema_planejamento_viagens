@@ -1,0 +1,30 @@
+<main class="account-shell">
+  <header class="page-head">
+    <div>
+      <span class="eyebrow">{{ mode === 'profile' ? 'Perfil' : 'Configurações' }}</span>
+      <h1>{{ mode === 'profile' ? 'A sua identidade de viajante.' : 'Ajuste o sistema ao seu jeito de viajar.' }}</h1>
+    </div>
+  </header>
+
+  <section class="account-grid">
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <span>Conta</span>
+        <h2>{{ auth.currentUser()?.name || 'Utilizador' }}</h2>
+        <p>{{ auth.currentUser()?.email || 'Sessão autenticada' }}</p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <span>Preferências</span>
+        <h2>Modo visual e moeda</h2>
+        <p>O tema e a moeda ficam persistidos para manter o painel consistente.</p>
+        <div class="settings-row">
+          <app-theme-toggle />
+          <strong>{{ currency.current().label }} ({{ currency.currency() }})</strong>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </section>
+</main>

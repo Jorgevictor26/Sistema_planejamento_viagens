@@ -96,9 +96,9 @@ export class TripService {
     return this.http.delete<ApiResponse<null>>(`${environment.apiUrl}/trips/${id}`);
   }
 
-  imageUrl(trip: Pick<Trip, 'image'>): string | null {
+  imageUrl(trip: Pick<Trip, 'image' | 'destination_city' | 'destination_country'>): string {
     if (!trip.image) {
-      return null;
+      return this.destinationImageUrl(trip);
     }
 
     if (trip.image.startsWith('http')) {
@@ -106,6 +106,12 @@ export class TripService {
     }
 
     return `${environment.apiUrl.replace('/api', '')}/storage/${trip.image}`;
+  }
+
+  destinationImageUrl(trip: Pick<Trip, 'destination_city' | 'destination_country'>): string {
+    const query = encodeURIComponent(`${trip.destination_city} ${trip.destination_country} city travel`);
+
+    return `https://source.unsplash.com/720x480/?${query}`;
   }
 
   private toFormData(payload: Partial<TripPayload>): FormData {

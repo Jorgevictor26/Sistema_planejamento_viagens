@@ -1,39 +1,25 @@
 .trip-card {
+  display: grid;
+  grid-template-columns: 156px minmax(0, 1fr);
   height: 100%;
   overflow: hidden;
   border-radius: 8px;
   background: var(--surface);
-}
-
-img,
-.image-placeholder {
-  width: 100%;
-  aspect-ratio: 16 / 10;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.07);
 }
 
 img {
+  width: 100%;
+  height: 100%;
+  min-height: 176px;
   object-fit: cover;
-}
-
-.image-placeholder {
-  display: grid;
-  place-items: center;
-  background:
-    linear-gradient(135deg, rgba(37, 99, 235, 0.18), transparent),
-    linear-gradient(315deg, rgba(16, 185, 129, 0.18), transparent),
-    var(--background);
-}
-
-.image-placeholder span {
-  color: var(--accent);
-  font-size: 2rem;
-  font-weight: 900;
 }
 
 mat-card-content {
   display: grid;
-  gap: 16px;
-  padding: 18px;
+  align-content: space-between;
+  gap: 12px;
+  padding: 16px;
 }
 
 .card-head,
@@ -60,7 +46,7 @@ p {
 }
 
 .card-head strong {
-  font-size: 1.35rem;
+  font-size: 1.18rem;
 }
 
 .card-head b {
@@ -75,7 +61,6 @@ p {
 
 p {
   display: -webkit-box;
-  min-height: 3.1em;
   margin: 0;
   overflow: hidden;
   line-height: 1.55;
@@ -86,4 +71,16 @@ p {
 .actions {
   flex-wrap: wrap;
   gap: 10px;
+}
+
+@media (max-width: 560px) {
+  .trip-card {
+    grid-template-columns: 1fr;
+  }
+
+  img {
+    height: auto;
+    min-height: auto;
+    aspect-ratio: 16 / 9;
+  }
 }

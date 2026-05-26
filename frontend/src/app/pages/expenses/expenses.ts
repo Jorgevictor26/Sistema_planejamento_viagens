@@ -2,14 +2,16 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatNativeDateModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 
 import { ExpenseChart } from '../../components/expense-chart/expense-chart';
 import { ExpenseForm } from '../../components/expense-form/expense-form';
 import { ExpenseTable } from '../../components/expense-table/expense-table';
-import { Navbar } from '../../components/navbar/navbar';
+import { CurrencyService } from '../../services/currency.service';
 import { Expense, ExpensePayload, ExpenseService, expenseCategories, PaginatedExpenses } from '../../services/expense.service';
 import { Trip, TripService } from '../../services/trip.service';
 
@@ -19,10 +21,11 @@ import { Trip, TripService } from '../../services/trip.service';
     ReactiveFormsModule,
     MatButtonModule,
     MatCardModule,
+    MatDatepickerModule,
     MatFormFieldModule,
     MatInputModule,
+    MatNativeDateModule,
     MatSelectModule,
-    Navbar,
     ExpenseChart,
     ExpenseForm,
     ExpenseTable,
@@ -32,6 +35,7 @@ import { Trip, TripService } from '../../services/trip.service';
 })
 export class ExpensesPage {
   private readonly fb = inject(FormBuilder);
+  readonly currency = inject(CurrencyService);
   private readonly expenses = inject(ExpenseService);
   private readonly tripsService = inject(TripService);
 
@@ -47,19 +51,29 @@ export class ExpensesPage {
   readonly filters = this.fb.nonNullable.group({
     trip_id: [''],
     category: [''],
-    from: [''],
-    to: [''],
+    from: [null as Date | string | null],
+    to: [null as Date | string | null],
   });
 
   readonly selectedBudget = computed<number | null>(() => {
+    return this.selectedTrip()?.budget ? Number(this.selectedTrip()?.budget) : null;
+  });
+
+  readonly selectedTrip = computed<Trip | null>(() => {
     const tripId = Number(this.filters.controls.trip_id.value);
 
     if (!tripId) {
       return null;
     }
 
-    const trip = this.trips().find((item) => item.id === tripId);
-    return trip?.budget ? Number(trip.budget) : null;
+    return this.trips().find((item) => item.id === tripId) || null;
+  });
+
+  readonly selectedSpent = computed(() => this.items().reduce((sum, expense) => sum + Number(expense.amount), 0));
+  readonly selectedRemaining = computed(() => {
+    const budget = this.selectedBudget();
+
+    return budget === null ? null : budget - this.selectedSpent();
   });
 
   constructor() {
@@ -78,7 +92,7 @@ export class ExpensesPage {
     this.loading.set(true);
     this.error.set('');
 
-    this.expenses.list({ ...this.filters.getRawValue(), page, per_page: 50 }).subscribe({
+    this.expenses.list({ ...this.filterPayload(), page, per_page: 50 }).subscribe({
       next: (response) => {
         this.pagination.set(response.data);
         this.items.set(response.data.data);
@@ -102,7 +116,13 @@ export class ExpensesPage {
         this.editing.set(null);
         this.loadExpenses(this.pagination()?.current_page || 1);
       },
-      error: (error) => this.error.set(error.error?.message || 'Nao foi possivel salvar a despesa.'),
+      error: (error) => {
+        const details = error.error?.errors
+          ? Object.values(error.error.errors).flat().join(' ')
+          : '';
+
+        this.error.set(details || error.error?.message || 'Nao foi possivel salvar a despesa.');
+      },
       complete: () => this.saving.set(false),
     });
   }
@@ -122,9 +142,32 @@ export class ExpensesPage {
     this.filters.reset({
       trip_id: '',
       category: '',
-      from: '',
-      to: '',
+      from: null,
+      to: null,
     });
     this.loadExpenses();
+  }
+
+  private filterPayload(): Record<string, string | number | null> {
+    const raw = this.filters.getRawValue();
+
+    return {
+      ...raw,
+      from: this.toDatePayload(raw.from),
+      to: this.toDatePayload(raw.to),
+    };
+  }
+
+  private toDatePayload(value: Date | string | null): string | null {
+    if (!value) {
+      return null;
+    }
+
+    if (typeof value === 'string') {
+      return value.slice(0, 10);
+    }
+
+    const offsetDate = new Date(value.getTime() - value.getTimezoneOffset() * 60000);
+    return offsetDate.toISOString().slice(0, 10);
   }
 }

@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ApiResponse } from '../core/models/auth.models';
 
-export const favoriteTypes = ['destino', 'hotel', 'restaurante'] as const;
+export const favoriteTypes = ['destino', 'hotel', 'restaurante', 'atração'] as const;
 export type FavoriteType = typeof favoriteTypes[number];
 
 export interface Favorite {

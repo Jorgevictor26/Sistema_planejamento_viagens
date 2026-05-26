@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../services/auth.service';
+import { LanguageToggle } from '../../shared/language-toggle/language-toggle';
 import { ThemeToggle } from '../../shared/theme-toggle/theme-toggle';
 
 @Component({
@@ -18,6 +19,7 @@ import { ThemeToggle } from '../../shared/theme-toggle/theme-toggle';
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
+    LanguageToggle,
     ThemeToggle,
   ],
   templateUrl: './register.html',

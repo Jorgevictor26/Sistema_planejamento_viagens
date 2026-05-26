@@ -1,86 +1,179 @@
 <main class="dashboard-shell">
-  <header class="topbar">
+  <header class="dashboard-top">
     <div>
-      <span class="eyebrow">Dashboard</span>
-      <h1>Pesquisa inteligente de destinos</h1>
+      <span class="eyebrow">Painel geral</span>
+      <h1>Gestão das suas viagens</h1>
+      <p>Gastos, destinos, agenda e próximas ações reunidos num painel só.</p>
     </div>
 
-    <div class="actions">
-      <app-theme-toggle />
-      <button mat-stroked-button type="button" (click)="auth.logout()">
-        <span class="button-icon" aria-hidden="true">↪</span>
-        Sair
-      </button>
+    <div class="top-actions">
+      <a class="new-trip-action" routerLink="/trips/new">Nova viagem</a>
+
+      <div class="export-actions">
+        <button mat-stroked-button type="button" (click)="exportTrips('csv')">Viagens CSV</button>
+        <button mat-stroked-button type="button" (click)="exportTrips('pdf')">Viagens PDF</button>
+        <button mat-stroked-button type="button" (click)="exportExpenses('csv')">Despesas CSV</button>
+        <button mat-stroked-button type="button" (click)="exportExpenses('pdf')">Despesas PDF</button>
+      </div>
+
     </div>
   </header>
 
-  <section class="search-panel">
-    <mat-form-field appearance="outline">
-      <mat-label>Pesquisar cidade ou pais</mat-label>
-      <input
-        matInput
-        type="text"
-        [formControl]="cityControl"
-        [matAutocomplete]="citiesAuto"
-        autocomplete="off"
-      >
-      <mat-autocomplete #citiesAuto="matAutocomplete" [displayWith]="displayCity" (optionSelected)="chooseCity($event.option.value)">
-        @for (city of cities$ | async; track city.id) {
-          <mat-option [value]="city">
-            @if (city.type === 'country') {
-              Pais - {{ city.name }} ({{ city.country_code }})
-            } @else {
-              Cidade - {{ city.name }} - {{ city.country }} @if (city.region) { <span>({{ city.region }})</span> }
-            }
-          </mat-option>
-        }
-      </mat-autocomplete>
-    </mat-form-field>
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  <section class="bento-stats">
+    <article class="total-card">
+      <div>
+        <span>Total gasto em viagens</span>
+        <strong>{{ currency.format(totalSpent(), 2) }}</strong>
+        <p>{{ totalTrips() }} viagens cadastradas no sistema.</p>
+      </div>
+      <b aria-hidden="true">¤</b>
+    </article>
+
+    <article class="metric-card primary">
+      <span aria-hidden="true">✈</span>
+      <small>Viagens</small>
+      <strong>{{ totalTrips() }}</strong>
+      <p>Planejadas e registradas</p>
+    </article>
+
+    <article class="metric-card">
+      <span aria-hidden="true">★</span>
+      <small>Favoritos</small>
+      <strong>{{ favorites().length }}</strong>
+      <p>Destinos e locais salvos</p>
+    </article>
   </section>
 
-  <section class="content-grid">
-    <mat-card appearance="outlined">
-      <mat-card-header>
-        <mat-card-title>Destino selecionado</mat-card-title>
-        <mat-card-subtitle>Cidade ou pais</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        @if (selectedCity(); as city) {
-          <dl>
-            <div><dt>Tipo</dt><dd>{{ city.type === 'country' ? 'Pais' : 'Cidade' }}</dd></div>
-            <div><dt>Nome</dt><dd>{{ city.name }}</dd></div>
-            <div><dt>Pais</dt><dd>{{ city.country }} ({{ city.country_code }})</dd></div>
-            @if (city.type === 'city') {
-              <div><dt>Latitude</dt><dd>{{ city.latitude }}</dd></div>
-              <div><dt>Longitude</dt><dd>{{ city.longitude }}</dd></div>
-            }
-          </dl>
-        } @else {
-          <p class="empty">Comece digitando uma cidade ou pais.</p>
-        }
-      </mat-card-content>
-    </mat-card>
+  <section class="middle-grid">
+    <article class="budget-card">
+      <div class="card-head">
+        <h2>Orçamento das viagens</h2>
+        <span>{{ currentMonthLabel() }}</span>
+      </div>
 
-    <mat-card appearance="outlined">
-      <mat-card-header>
-        <mat-card-title>Clima atual</mat-card-title>
-        <mat-card-subtitle>OpenWeatherMap</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        @if (weather(); as item) {
-          <div class="weather-readout">
-            <strong>{{ item.temperature }} C</strong>
-            <span>{{ item.description }}</span>
+      <div class="budget-line">
+        <span>Gasto atual</span>
+        <strong>
+          {{ currency.format(totalSpent(), 2) }}
+          @if (plannedBudget() !== null) {
+            / {{ currency.format(plannedBudget()!, 2) }}
+          }
+        </strong>
+      </div>
+
+      <div class="progress-track">
+        <div [style.width.%]="budgetProgress()"></div>
+      </div>
+
+      <div class="category-grid">
+        @for (category of expenseHighlights(); track category.label) {
+          <div>
+            <span>{{ category.label }}</span>
+            <strong>{{ currency.format(category.total, 2) }}</strong>
           </div>
-          <dl>
-            <div><dt>Sensacao</dt><dd>{{ item.feels_like }} C</dd></div>
-            <div><dt>Humidade</dt><dd>{{ item.humidity }}%</dd></div>
-            <div><dt>Vento</dt><dd>{{ item.wind_speed }} m/s</dd></div>
-          </dl>
-        } @else {
-          <p class="empty">{{ error() || 'Selecione uma cidade para ver o clima.' }}</p>
+        } @empty {
+          <div>
+            <span>Sem despesas</span>
+            <strong>{{ currency.format(0, 2) }}</strong>
+          </div>
         }
-      </mat-card-content>
-    </mat-card>
+      </div>
+    </article>
+
+    <article class="popular-card">
+      <div class="card-head">
+        <h2>Destinos populares</h2>
+        <a routerLink="/trips">Ver todos</a>
+      </div>
+
+      <div class="destination-strip">
+        @for (destination of popularDestinations(); track destination.destination_city + destination.destination_country) {
+          <a class="destination-tile" routerLink="/trips" [queryParams]="{ q: destination.destination_city }">
+            <div>
+              <strong>{{ destination.destination_city }}</strong>
+              <span>{{ destination.destination_country }}</span>
+            </div>
+            <b>{{ destination.total }}</b>
+          </a>
+        } @empty {
+          <a class="destination-tile empty-tile" routerLink="/trips/new">
+            <div>
+              <strong>Criar primeira viagem</strong>
+              <span>Escolha um destino real</span>
+            </div>
+            <b>+</b>
+          </a>
+        }
+      </div>
+    </article>
+  </section>
+
+  <section class="bottom-grid">
+    <article class="schedule-card">
+      <div class="card-head">
+        <h2>Agenda de viagens</h2>
+        <a routerLink="/trips/new">Nova viagem</a>
+      </div>
+
+      <div class="schedule-list">
+        @for (trip of upcomingTrips(); track trip.id) {
+          <a class="schedule-item" [routerLink]="['/trips', trip.id]">
+            <time>
+              <span>{{ trip.start_date ? (trip.start_date | date:'MMM') : 'Sem' }}</span>
+              <strong>{{ trip.start_date ? (trip.start_date | date:'dd') : '--' }}</strong>
+            </time>
+            <div>
+              <strong>{{ trip.destination_city }}</strong>
+              <span>
+                {{ trip.destination_country }}
+                @if (trip.start_date && trip.end_date) {
+                  • {{ trip.start_date | date:'dd/MM' }} - {{ trip.end_date | date:'dd/MM' }}
+                }
+              </span>
+            </div>
+            <b aria-hidden="true">›</b>
+          </a>
+        } @empty {
+          <a class="schedule-item empty-item" routerLink="/trips/new">
+            <time><span>Novo</span><strong>+</strong></time>
+            <div>
+              <strong>Nenhuma viagem agendada</strong>
+              <span>Crie uma viagem para montar o seu calendário.</span>
+            </div>
+          </a>
+        }
+      </div>
+    </article>
+
+    <article class="expenses-card">
+      <div class="card-head">
+        <h2>Despesas recentes</h2>
+        <a routerLink="/expenses">Ver extrato</a>
+      </div>
+
+      <div class="expense-list">
+        @for (expense of recentExpenses(); track expense.id) {
+          <div class="expense-item">
+            <span class="expense-icon" aria-hidden="true">{{ expenseIcon(expense.category) }}</span>
+            <div>
+              <strong>{{ expense.description || expense.category }}</strong>
+              <span>
+                {{ expense.category }}
+                @if (expense.expense_date) {
+                  • {{ expense.expense_date | date:'dd/MM/yyyy' }}
+                }
+              </span>
+            </div>
+            <b>- {{ currency.format(expense.amount, 2) }}</b>
+          </div>
+        } @empty {
+          <p class="empty">Nenhuma despesa registrada ainda.</p>
+        }
+      </div>
+    </article>
   </section>
 </main>

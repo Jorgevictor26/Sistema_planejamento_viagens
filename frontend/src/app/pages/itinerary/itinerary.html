@@ -1,10 +1,24 @@
-<app-navbar />
-
 <main class="itinerary-shell">
   <header class="page-head">
     <div>
-      <span class="eyebrow">Roteiro</span>
-      <h1>Atividades por dia</h1>
+      <span class="eyebrow">Criar roteiro</span>
+      <h1>Monte o roteiro da viagem sem perder o ritmo.</h1>
+      <p>Organize atividades por dia, horário e local em uma visão simples de acompanhar.</p>
+    </div>
+
+    <div class="summary-strip" aria-label="Resumo do roteiro">
+      <div>
+        <strong>{{ items().length }}</strong>
+        <span>atividades</span>
+      </div>
+      <div>
+        <strong>{{ totalDays() }}</strong>
+        <span>dias</span>
+      </div>
+      <div>
+        <strong>{{ scheduledItems() }}</strong>
+        <span>com horário</span>
+      </div>
     </div>
   </header>
 
@@ -13,18 +27,36 @@
   }
 
   <section class="planner-grid">
-    <app-itinerary-form
-      [trips]="trips()"
-      [itinerary]="editing()"
-      [loading]="saving()"
-      (submitted)="save($event)"
-      (cancelled)="editing.set(null)"
-    />
+    <section class="planner-panel">
+      <div class="section-head">
+        <span>{{ editing() ? 'Editar atividade' : 'Nova atividade' }}</span>
+        <strong>{{ saving() ? 'Salvando...' : 'Roteiro' }}</strong>
+      </div>
+      <app-itinerary-form
+        [trips]="trips()"
+        [itinerary]="editing()"
+        [loading]="saving()"
+        (submitted)="save($event)"
+        (cancelled)="editing.set(null)"
+      />
+    </section>
 
-    <app-timeline [itineraries]="items()" />
+    <section class="planner-panel">
+      <div class="section-head">
+        <span>Linha do tempo</span>
+        <strong>{{ totalDays() || 0 }} dia(s)</strong>
+      </div>
+      <app-timeline [itineraries]="items()" />
+    </section>
   </section>
 
   <mat-card class="filters-card" appearance="outlined">
+    <div class="filters-title">
+      <div>
+        <span class="eyebrow">Filtros</span>
+        <strong>Encontrar atividades</strong>
+      </div>
+    </div>
     <form [formGroup]="filters" (ngSubmit)="loadItineraries()">
       <mat-form-field appearance="outline">
         <mat-label>Viagem</mat-label>
@@ -53,18 +85,26 @@
     </form>
   </mat-card>
 
-  <app-itinerary-list
-    [itineraries]="items()"
-    [loading]="loading()"
-    (edited)="editing.set($event)"
-    (removed)="deleteItinerary($event)"
-  />
+  <section class="activities-section">
+    <div class="section-head">
+      <span>Atividades cadastradas</span>
+      <strong>{{ items().length }} item(ns)</strong>
+    </div>
+    <app-itinerary-list
+      [itineraries]="items()"
+      [loading]="loading()"
+      (edited)="editing.set($event)"
+      (removed)="deleteItinerary($event)"
+    />
+  </section>
 
   @if (pagination(); as page) {
+    @if (page.last_page > 1) {
     <nav class="pager" aria-label="Paginacao">
       <button mat-stroked-button type="button" [disabled]="!page.prev_page_url" (click)="loadItineraries(page.current_page - 1)">Anterior</button>
       <span>Pagina {{ page.current_page }} de {{ page.last_page }}</span>
       <button mat-stroked-button type="button" [disabled]="!page.next_page_url" (click)="loadItineraries(page.current_page + 1)">Proxima</button>
     </nav>
+    }
   }
 </main>

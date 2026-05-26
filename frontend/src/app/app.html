@@ -1,1 +1,12 @@
+<app-global-loading />
 <router-outlet />
+
+@if (auth.sessionExpired()) {
+  <div class="session-modal-backdrop" role="presentation">
+    <section class="session-modal" role="dialog" aria-modal="true" aria-labelledby="session-title">
+      <h2 id="session-title">Tempo de sessão terminado</h2>
+      <p>Por segurança, a sua sessão terminou. Faça login novamente para continuar.</p>
+      <button type="button" (click)="auth.acknowledgeSessionExpired()">Fazer login novamente</button>
+    </section>
+  </div>
+}

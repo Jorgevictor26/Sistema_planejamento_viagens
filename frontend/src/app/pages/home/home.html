@@ -1,5 +1,75 @@
-<app-navbar />
-<app-hero-search (destinationSelected)="selectedDestination.set($event)" />
-<app-weather-widget [destination]="selectedDestination()" />
-<app-popular-destinations (selected)="selectedDestination.set($event)" />
+<app-navbar (authRequested)="authModalOpen.set(true)" />
+<app-hero-search (destinationSelected)="openDestinationDetails($event)" (authRequested)="authModalOpen.set(true)" />
+<app-popular-destinations (selected)="openDestinationDetails($event)" />
+
+<section class="recommendations" [attr.aria-label]="language.t('recommendationsLabel')">
+  <article>
+    <span>{{ language.t('beaches') }}</span>
+    <strong>{{ language.t('beachesTitle') }}</strong>
+    <p>{{ language.t('beachesText') }}</p>
+  </article>
+  <article>
+    <span>{{ language.t('adventure') }}</span>
+    <strong>{{ language.t('adventureTitle') }}</strong>
+    <p>{{ language.t('adventureText') }}</p>
+  </article>
+  <article>
+    <span>{{ language.t('economy') }}</span>
+    <strong>{{ language.t('economyTitle') }}</strong>
+    <p>{{ language.t('economyText') }}</p>
+  </article>
+</section>
+
 <app-footer />
+
+@if (detailsModalOpen()) {
+  @if (selectedDestination(); as destination) {
+    <div class="modal-backdrop details-backdrop" (click)="detailsModalOpen.set(false)">
+      <section class="details-modal" role="dialog" aria-modal="true" aria-labelledby="details-title" (click)="$event.stopPropagation()">
+        <button class="close" type="button" aria-label="Fechar" (click)="detailsModalOpen.set(false)">×</button>
+
+        <span class="eyebrow">{{ language.t('detailsEyebrow') }}</span>
+        <h2 id="details-title">{{ destination.name }}, {{ destination.country }}</h2>
+        <p>{{ language.t('detailsText') }}</p>
+
+        <button mat-flat-button color="primary" type="button" (click)="planTrip(destination)">
+          {{ language.t('createTrip') }}
+        </button>
+
+        <app-weather-widget [destination]="destination" />
+      </section>
+    </div>
+  }
+}
+
+@if (authModalOpen()) {
+  <div class="modal-backdrop" (click)="authModalOpen.set(false)">
+    <section class="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-title" (click)="$event.stopPropagation()">
+      <button class="close" type="button" aria-label="Fechar" (click)="authModalOpen.set(false)">×</button>
+
+      <span class="eyebrow">{{ language.language() === 'en' ? 'Free account' : 'Conta gratuita' }}</span>
+      <h2 id="auth-title">
+        {{ language.language() === 'en' ? 'Planning is better when your trip is saved.' : 'Planeje melhor quando a sua viagem fica guardada.' }}
+      </h2>
+      <p>
+        {{ language.language() === 'en'
+          ? 'Create an account to save trips, track expenses, build itineraries, keep favorites and check weather and maps whenever you return.'
+          : 'Crie uma conta para salvar viagens, controlar despesas, montar roteiros, guardar favoritos e consultar clima e mapas sempre que voltar.' }}
+      </p>
+
+      <div class="benefits">
+        <span>{{ language.language() === 'en' ? 'Saved trips' : 'Viagens salvas' }}</span>
+        <span>{{ language.language() === 'en' ? 'Expenses' : 'Despesas' }}</span>
+        <span>{{ language.language() === 'en' ? 'Itineraries' : 'Roteiros' }}</span>
+        <span>{{ language.language() === 'en' ? 'Favorites' : 'Favoritos' }}</span>
+        <span>{{ language.language() === 'en' ? 'Weather and maps' : 'Clima e mapas' }}</span>
+      </div>
+
+      <div class="modal-actions">
+        <a routerLink="/login" class="secondary" (click)="authModalOpen.set(false)">{{ language.language() === 'en' ? 'Log in' : 'Iniciar sessão' }}</a>
+        <a routerLink="/register" class="primary" (click)="authModalOpen.set(false)">{{ language.language() === 'en' ? 'Sign up' : 'Criar conta' }}</a>
+        <button type="button" (click)="continueAsVisitor()">{{ language.language() === 'en' ? 'Continue as visitor' : 'Continuar como visitante' }}</button>
+      </div>
+    </section>
+  </div>
+}

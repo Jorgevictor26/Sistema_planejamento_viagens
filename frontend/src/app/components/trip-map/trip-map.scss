@@ -1,13 +1,29 @@
-.map-shell {
+.map-shell,
+.leaflet-map {
   overflow: hidden;
-  border: 1px solid var(--border);
   border-radius: 8px;
-  background: var(--surface);
 }
 
-iframe {
-  display: block;
+.map-shell {
+  border: 1px solid var(--border);
+  background: var(--surface-alt);
+}
+
+.leaflet-map,
+.map-fallback {
   width: 100%;
-  min-height: 340px;
+  min-height: clamp(300px, 42vw, 460px);
   border: 0;
+}
+
+.map-fallback {
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+:host ::ng-deep .leaflet-popup-content-wrapper,
+:host ::ng-deep .leaflet-popup-tip {
+  color: #172033;
 }

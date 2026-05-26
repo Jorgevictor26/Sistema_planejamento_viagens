@@ -1,11 +1,5 @@
 <mat-card class="trip-card" appearance="outlined">
-  @if (imageUrl(); as image) {
-    <img [src]="image" [alt]="trip().destination_city">
-  } @else {
-    <div class="image-placeholder">
-      <span>{{ trip().destination_city.slice(0, 2).toUpperCase() }}</span>
-    </div>
-  }
+  <img [src]="imageUrl()" [alt]="trip().destination_city" loading="lazy" (error)="useFallbackImage($event)">
 
   <mat-card-content>
     <div class="card-head">
@@ -19,8 +13,7 @@
     </div>
 
     <div class="meta">
-      <span>{{ trip().start_date ? (trip().start_date | date:'dd/MM/yyyy') : 'Sem data inicial' }}</span>
-      <span>{{ trip().end_date ? (trip().end_date | date:'dd/MM/yyyy') : 'Sem data final' }}</span>
+      <span>{{ travelPeriod() }}</span>
     </div>
 
     @if (trip().description) {

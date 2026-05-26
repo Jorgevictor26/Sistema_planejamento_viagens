@@ -1,7 +1,7 @@
 <mat-card class="itinerary-form-card" appearance="outlined">
   <form [formGroup]="form" (ngSubmit)="submit()">
     <mat-form-field appearance="outline">
-      <mat-label>Viagem</mat-label>
+      <mat-label>Viagem *</mat-label>
       <mat-select formControlName="trip_id">
         @for (trip of trips(); track trip.id) {
           <mat-option [value]="trip.id">{{ trip.destination_city }} - {{ trip.destination_country }}</mat-option>
@@ -10,19 +10,44 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-      <mat-label>Dia</mat-label>
+      <mat-label>Dia *</mat-label>
       <input matInput type="number" min="1" formControlName="day">
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-      <mat-label>Atividade</mat-label>
+      <mat-label>Atividade *</mat-label>
       <input matInput formControlName="activity">
     </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Horario</mat-label>
-      <input matInput type="time" formControlName="time">
-    </mat-form-field>
+    <div class="time-control">
+      <span>Horário</span>
+      <div class="time-picker">
+        <div class="time-fields" aria-label="Selecionar horário">
+          <select [value]="draftHour()" (change)="setDraftHour($any($event.target).value)" aria-label="Hora">
+            @for (hour of hourOptions; track hour) {
+              <option [value]="hour">{{ hour }}</option>
+            }
+          </select>
+          <span>:</span>
+          <select [value]="draftMinute()" (change)="setDraftMinute($any($event.target).value)" aria-label="Minuto">
+            @for (minute of minuteOptions; track minute) {
+              <option [value]="minute">{{ minute }}</option>
+            }
+          </select>
+          <div class="period-toggle" aria-label="Periodo">
+            <button type="button" [class.active]="draftPeriod() === 'AM'" (click)="setDraftPeriod('AM')">AM</button>
+            <button type="button" [class.active]="draftPeriod() === 'PM'" (click)="setDraftPeriod('PM')">PM</button>
+          </div>
+        </div>
+        <div class="time-presets" aria-label="Sugestões de horário">
+          @for (preset of timePresets; track preset.value) {
+            <button type="button" [class.active]="form.controls.time.value === preset.value" (click)="setTime(preset.value)">
+              {{ preset.label }}
+            </button>
+          }
+        </div>
+      </div>
+    </div>
 
     <mat-form-field appearance="outline">
       <mat-label>Local</mat-label>

@@ -1,10 +1,11 @@
-<app-navbar />
-
 <main class="details-shell">
   <header class="page-head">
     <div>
       <span class="eyebrow">Detalhes</span>
       <h1>{{ trip()?.destination_city || 'Viagem' }}</h1>
+      @if (trip(); as item) {
+        <p>{{ item.destination_country }}</p>
+      }
     </div>
     <div class="actions">
       <a mat-stroked-button routerLink="/trips">Voltar</a>
@@ -31,24 +32,61 @@
             <img [src]="image" [alt]="item.destination_city">
           }
           <mat-card-content>
-            <span>{{ item.destination_country }}</span>
-            <h2>{{ item.destination_city }}</h2>
+            <span>Resumo da viagem</span>
             @if (item.description) {
               <p>{{ item.description }}</p>
             }
             <dl>
-              <div><dt>Inicio</dt><dd>{{ item.start_date ? (item.start_date | date:'dd/MM/yyyy') : 'Sem data' }}</dd></div>
-              <div><dt>Fim</dt><dd>{{ item.end_date ? (item.end_date | date:'dd/MM/yyyy') : 'Sem data' }}</dd></div>
-              <div><dt>Orcamento</dt><dd>{{ item.budget ? (+item.budget | currency:'USD':'symbol':'1.0-0') : 'Nao definido' }}</dd></div>
-              <div><dt>Coordenadas</dt><dd>{{ item.latitude }}, {{ item.longitude }}</dd></div>
+              <div><dt>Período</dt><dd>{{ travelPeriod() }}</dd></div>
+              <div><dt>Orçamento</dt><dd>{{ item.budget ? currency.format(item.budget) : 'Não definido' }}</dd></div>
             </dl>
           </mat-card-content>
         </mat-card>
 
         <div class="side-stack">
           <app-trip-map [latitude]="item.latitude" [longitude]="item.longitude" [label]="item.destination_city" />
-          <app-weather-widget [destination]="weatherDestination()" />
+          <app-weather-widget [destination]="weatherDestination()" [showIntro]="false" [showMap]="false" [showPlaces]="false" />
         </div>
+      </section>
+
+      <section class="places-section">
+        <div class="section-heading">
+          <span>Locais próximos</span>
+          <h2>Restaurantes, hotéis, cafés, praias, museus e atrações para esta viagem.</h2>
+          <p>Salve lugares diretamente como favoritos e mantenha tudo conectado ao seu planejamento.</p>
+        </div>
+
+        @if (favoriteMessage()) {
+          <p class="success">{{ favoriteMessage() }}</p>
+        }
+
+        @if (placesLoading()) {
+          <div class="place-grid">
+            <article class="place-card skeleton"></article>
+            <article class="place-card skeleton"></article>
+            <article class="place-card skeleton"></article>
+          </div>
+        } @else if (places().length) {
+          <div class="place-grid">
+            @for (place of places(); track place.id || place.name) {
+              <article class="place-card">
+                <img [src]="place.image || 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=500&q=80'" [alt]="place.name || 'Local próximo'">
+                <div>
+                  <span>{{ place.category }}</span>
+                  <strong>{{ place.name }}</strong>
+                  <small>{{ place.address }}</small>
+                  <div class="place-meta">
+                    <b>{{ place.rating || '8.5' }}/10</b>
+                    <b>{{ place.distance || 900 }} m</b>
+                  </div>
+                  <button mat-stroked-button type="button" (click)="savePlace(place)">Salvar nos favoritos</button>
+                </div>
+              </article>
+            }
+          </div>
+        } @else {
+          <p class="state">Nenhum local retornado pela API para este destino ainda.</p>
+        }
       </section>
     }
   }

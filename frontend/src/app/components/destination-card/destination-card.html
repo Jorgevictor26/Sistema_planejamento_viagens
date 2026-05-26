@@ -6,6 +6,25 @@
       <strong>{{ destination().name }}</strong>
     </div>
     <p>{{ destination().tagline }}</p>
-    <button mat-stroked-button type="button" (click)="selected.emit(destination())">Ver clima</button>
+
+    <div class="chips">
+      <span>{{ destination().climate }}</span>
+      <span>{{ destination().budget }}</span>
+    </div>
+
+    <div class="details">
+      <div>
+        <small>{{ language.language() === 'en' ? 'Restaurants' : 'Restaurantes' }}</small>
+        <strong>{{ destination().restaurants.join(' · ') }}</strong>
+      </div>
+      <div>
+        <small>{{ language.language() === 'en' ? 'Attractions' : 'Atrações' }}</small>
+        <strong>{{ destination().attractions.join(' · ') }}</strong>
+      </div>
+    </div>
+
+    <button mat-stroked-button type="button" (click)="selected.emit(destination())">
+      {{ language.language() === 'en' ? 'View details' : 'Ver detalhes' }}
+    </button>
   </mat-card-content>
 </mat-card>

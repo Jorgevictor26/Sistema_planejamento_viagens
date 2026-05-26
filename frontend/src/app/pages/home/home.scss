@@ -2,3 +2,217 @@
   display: block;
   min-height: 100dvh;
 }
+
+.recommendations {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  padding: 0 clamp(20px, 5vw, 64px) clamp(50px, 7vw, 90px);
+  background: var(--background);
+}
+
+.recommendations article {
+  display: grid;
+  gap: 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  background: var(--surface);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.recommendations article:hover {
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+  transform: translateY(-3px);
+}
+
+.recommendations span {
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.recommendations strong {
+  font-size: 1.15rem;
+}
+
+.recommendations p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(3, 7, 18, 0.48);
+  backdrop-filter: blur(12px);
+  animation: fade-in 180ms ease both;
+}
+
+.auth-modal {
+  position: relative;
+  display: grid;
+  gap: 18px;
+  width: min(620px, 100%);
+  border: 1px solid color-mix(in srgb, var(--border) 68%, transparent);
+  border-radius: 8px;
+  padding: clamp(22px, 4vw, 34px);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--surface) 92%, var(--accent)), var(--surface));
+  box-shadow: 0 30px 90px rgba(2, 8, 23, 0.34);
+  animation: modal-in 220ms ease both;
+}
+
+.details-modal {
+  position: relative;
+  display: grid;
+  gap: 14px;
+  width: min(1120px, 100%);
+  max-height: min(88dvh, 920px);
+  overflow: auto;
+  border: 1px solid color-mix(in srgb, var(--border) 68%, transparent);
+  border-radius: 8px;
+  padding: clamp(18px, 3vw, 28px);
+  background: var(--surface);
+  box-shadow: 0 30px 90px rgba(2, 8, 23, 0.34);
+  animation: modal-in 220ms ease both;
+}
+
+.details-modal > p {
+  max-width: 720px;
+}
+
+.details-modal > button {
+  justify-self: start;
+}
+
+.details-modal app-weather-widget {
+  display: block;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.details-modal ::ng-deep .insights {
+  padding: 0;
+  background: transparent;
+}
+
+.details-modal ::ng-deep .section-heading {
+  display: none;
+}
+
+.close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.eyebrow {
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+h2,
+p {
+  margin: 0;
+}
+
+h2 {
+  max-width: 520px;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  line-height: 1.05;
+}
+
+p {
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.benefits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.benefits span {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 8px 11px;
+  background: color-mix(in srgb, var(--surface) 80%, var(--accent));
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.modal-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.modal-actions a,
+.modal-actions button {
+  display: grid;
+  min-height: 44px;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  color: var(--text);
+  background: var(--surface);
+  font: inherit;
+  font-weight: 900;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modal-actions .primary {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 620px) {
+  .modal-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .recommendations {
+    grid-template-columns: 1fr;
+  }
+}

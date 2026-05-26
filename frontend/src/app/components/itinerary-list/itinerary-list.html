@@ -4,8 +4,11 @@
   <div class="list">
     @for (item of itineraries(); track item.id) {
       <article class="activity">
-        <div>
-          <span>Dia {{ item.day }} @if (item.time) { - {{ item.time.slice(0, 5) }} }</span>
+        <div class="activity-time">
+          <span>Dia {{ item.day }}</span>
+          <strong>{{ item.time ? item.time.slice(0, 5) : '--:--' }}</strong>
+        </div>
+        <div class="activity-body">
           <strong>{{ item.activity }}</strong>
           @if (item.location) {
             <small>{{ item.location }}</small>
@@ -14,7 +17,7 @@
             <p>{{ item.description }}</p>
           }
         </div>
-        <div class="actions">
+        <div class="activity-actions">
           <button mat-button type="button" (click)="edited.emit(item)">Editar</button>
           <button mat-button type="button" (click)="removed.emit(item.id)">Remover</button>
         </div>

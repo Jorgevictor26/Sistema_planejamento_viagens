@@ -3,10 +3,17 @@
 :root {
   --background: #f5f7fb;
   --surface: #ffffff;
+  --surface-alt: #eef3fb;
   --text: #172033;
   --muted: #667085;
   --border: #d8dee9;
   --accent: #2563eb;
+  --accent-contrast: #ffffff;
+  --accent-soft: color-mix(in srgb, var(--accent) 12%, var(--surface));
+  --button-shadow: 0 14px 34px color-mix(in srgb, var(--accent) 24%, transparent);
+  --success: #059669;
+  --danger: #b42318;
+  color-scheme: light;
 }
 
 * {
@@ -21,31 +28,142 @@ body {
 body {
   margin: 0;
   background:
-    linear-gradient(135deg, rgba(37, 99, 235, 0.12), transparent 34%),
-    linear-gradient(315deg, rgba(16, 185, 129, 0.12), transparent 30%),
+    linear-gradient(135deg, color-mix(in srgb, var(--accent) 12%, transparent), transparent 34%),
+    linear-gradient(315deg, color-mix(in srgb, var(--success) 12%, transparent), transparent 30%),
     var(--background);
   color: var(--text);
   font-family: Inter, Roboto, Arial, sans-serif;
 }
 
 body.dark-theme {
-  --background: #12151c;
-  --surface: #1c2230;
+  --background: #0f141b;
+  --surface: #1a2330;
+  --surface-alt: #111923;
   --text: #edf2f7;
   --muted: #aab4c5;
   --border: #344052;
   --accent: #38bdf8;
+  --accent-contrast: #08111f;
+  --accent-soft: color-mix(in srgb, var(--accent) 18%, var(--surface));
+  --button-shadow: 0 14px 34px color-mix(in srgb, var(--accent) 18%, transparent);
+  --success: #34d399;
+  --danger: #f87171;
+  color-scheme: dark;
 }
 
 body.dark-theme .mat-mdc-card,
 body.dark-theme .mat-mdc-text-field-wrapper,
-body.dark-theme .mat-mdc-autocomplete-panel {
+body.dark-theme .mat-mdc-autocomplete-panel,
+body.dark-theme .mat-mdc-select-panel,
+body.dark-theme .mat-mdc-menu-panel,
+body.dark-theme .mat-mdc-dialog-container .mdc-dialog__surface {
   color: var(--text);
   background: var(--surface);
 }
 
 body.dark-theme .mat-mdc-form-field-label,
 body.dark-theme .mat-mdc-input-element,
-body.dark-theme .mat-mdc-card-subtitle {
+body.dark-theme .mat-mdc-select-value,
+body.dark-theme .mat-mdc-select-arrow,
+body.dark-theme .mat-mdc-card-subtitle,
+body.dark-theme .mat-mdc-option,
+body.dark-theme .mat-mdc-button,
+body.dark-theme .mat-mdc-outlined-button,
+body.dark-theme .mat-mdc-icon-button {
   color: var(--text);
+}
+
+body.dark-theme .mdc-notched-outline__leading,
+body.dark-theme .mdc-notched-outline__notch,
+body.dark-theme .mdc-notched-outline__trailing {
+  border-color: var(--border);
+}
+
+button,
+a[mat-button],
+a[mat-flat-button],
+a[mat-stroked-button],
+.mat-mdc-button,
+.mat-mdc-unelevated-button,
+.mat-mdc-raised-button,
+.mat-mdc-outlined-button {
+  border-radius: 8px !important;
+  font-weight: 900 !important;
+}
+
+.mat-mdc-unelevated-button,
+.mat-mdc-raised-button,
+.new-trip-action,
+.modal-actions .primary {
+  background: var(--accent) !important;
+  color: var(--accent-contrast) !important;
+  box-shadow: var(--button-shadow);
+}
+
+.mat-mdc-outlined-button,
+.mat-mdc-button,
+a[mat-button],
+a[mat-stroked-button],
+button[mat-button],
+button[mat-stroked-button],
+.hamburger,
+.menu-button,
+.close,
+.dropdown button,
+.modal-actions a,
+.modal-actions button:not(.primary),
+mat-card-actions a {
+  border-color: color-mix(in srgb, var(--accent) 42%, var(--border)) !important;
+  background: var(--accent-soft) !important;
+  color: var(--accent) !important;
+}
+
+.mat-mdc-button-base:not(:disabled),
+.new-trip-action,
+.hamburger,
+.menu-button,
+.close,
+.dropdown button,
+.modal-actions a,
+.modal-actions button,
+mat-card-actions a {
+  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, color 180ms ease;
+}
+
+.mat-mdc-button-base:not(:disabled):hover,
+.new-trip-action:hover,
+.hamburger:hover,
+.menu-button:hover,
+.close:hover,
+.dropdown button:hover,
+.modal-actions a:hover,
+.modal-actions button:not(:disabled):hover,
+mat-card-actions a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 42px color-mix(in srgb, var(--accent) 24%, transparent);
+}
+
+.mat-mdc-button-base:disabled {
+  opacity: 0.54;
+  box-shadow: none;
+}
+
+.success-toast {
+  --mdc-snackbar-container-color: var(--success);
+  --mdc-snackbar-supporting-text-color: #fff;
+}
+
+.error-toast {
+  --mdc-snackbar-container-color: var(--danger);
+  --mdc-snackbar-supporting-text-color: #fff;
+}
+
+.info-toast {
+  --mdc-snackbar-container-color: var(--accent);
+  --mdc-snackbar-supporting-text-color: #fff;
+}
+
+img,
+table {
+  max-width: 100%;
 }

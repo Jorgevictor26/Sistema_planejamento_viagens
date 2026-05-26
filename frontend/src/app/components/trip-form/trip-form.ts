@@ -1,58 +1,159 @@
-import { Component, effect, inject, input, output } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatNativeDateModule } from '@angular/material/core';
+import { catchError, debounceTime, distinctUntilChanged, map, Observable, of, startWith, switchMap } from 'rxjs';
 
+import { CityResult, LocationService } from '../../services/location.service';
 import { Trip, TripPayload } from '../../services/trip.service';
 import { UploadBox } from '../upload-box/upload-box';
+import { WeatherWidget } from '../weather-widget/weather-widget';
+
+const curatedCities: CityResult[] = [
+  {
+    type: 'city',
+    id: 'trip-luanda',
+    name: 'Luanda',
+    city: 'Luanda',
+    country: 'Angola',
+    country_code: 'AO',
+    region: 'Luanda',
+    latitude: -8.839,
+    longitude: 13.2894,
+    population: 2571861,
+  },
+  {
+    type: 'city',
+    id: 'trip-cape-town',
+    name: 'Cape Town',
+    city: 'Cape Town',
+    country: 'South Africa',
+    country_code: 'ZA',
+    region: 'Western Cape',
+    latitude: -33.9249,
+    longitude: 18.4241,
+    population: 433688,
+  },
+];
 
 @Component({
   selector: 'app-trip-form',
-  imports: [ReactiveFormsModule, MatButtonModule, MatCardModule, MatFormFieldModule, MatInputModule, UploadBox],
+  imports: [
+    AsyncPipe,
+    ReactiveFormsModule,
+    MatAutocompleteModule,
+    MatButtonModule,
+    MatCardModule,
+    MatDatepickerModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatNativeDateModule,
+    UploadBox,
+    WeatherWidget,
+  ],
   templateUrl: './trip-form.html',
   styleUrl: './trip-form.scss',
 })
 export class TripForm {
   private readonly fb = inject(FormBuilder);
+  private readonly locations = inject(LocationService);
 
   readonly trip = input<Trip | null>(null);
   readonly loading = input(false);
   readonly submitted = output<TripPayload>();
   readonly cancelled = output<void>();
+  readonly selectedCity = signal<CityResult | null>(null);
+  readonly destinationControl = this.fb.nonNullable.control<string | CityResult>('', [Validators.required]);
+  readonly destinationError = signal('');
+  readonly canSubmit = computed(() => this.form.valid && Boolean(this.selectedCity()));
 
   selectedImage: File | null = null;
 
-  readonly form = this.fb.nonNullable.group({
-    destination_city: ['', [Validators.required, Validators.maxLength(255)]],
-    destination_country: ['', [Validators.required, Validators.maxLength(255)]],
+  readonly form = this.fb.group({
     latitude: [0, [Validators.required, Validators.min(-90), Validators.max(90)]],
     longitude: [0, [Validators.required, Validators.min(-180), Validators.max(180)]],
-    start_date: [''],
-    end_date: [''],
+    start_date: [null as Date | string | null],
+    end_date: [null as Date | string | null],
     budget: [0, [Validators.min(0)]],
     description: [''],
   });
+
+  readonly cities$: Observable<CityResult[]> = this.destinationControl.valueChanges.pipe(
+    startWith(''),
+    map((value) => typeof value === 'string' ? value : value.name || ''),
+    debounceTime(260),
+    distinctUntilChanged(),
+    switchMap((query) => {
+      this.destinationError.set('');
+
+      if (query.length < 2) {
+        return of([]);
+      }
+
+      return this.locations.searchDestinations(query).pipe(
+        map((response) => this.cityOnlySuggestions(query, response.data)),
+        catchError(() => of(this.cityOnlySuggestions(query, []))),
+      );
+    }),
+  );
 
   constructor() {
     effect(() => {
       const trip = this.trip();
 
       if (!trip) {
+        this.applyStoredDestination();
         return;
       }
 
       this.form.patchValue({
-        destination_city: trip.destination_city,
-        destination_country: trip.destination_country,
         latitude: trip.latitude,
         longitude: trip.longitude,
-        start_date: this.toDateInput(trip.start_date),
-        end_date: this.toDateInput(trip.end_date),
+        start_date: this.toDateValue(trip.start_date),
+        end_date: this.toDateValue(trip.end_date),
         budget: trip.budget ? Number(trip.budget) : 0,
         description: trip.description || '',
       });
+
+      const city: CityResult = {
+        type: 'city',
+        id: trip.id,
+        name: trip.destination_city,
+        city: trip.destination_city,
+        country: trip.destination_country,
+        country_code: null,
+        region: null,
+        latitude: trip.latitude,
+        longitude: trip.longitude,
+        population: null,
+      };
+
+      this.selectedCity.set(city);
+      this.destinationControl.setValue(city, { emitEvent: false });
+    });
+  }
+
+  displayCity(city: CityResult | string): string {
+    return typeof city === 'string' ? city : [city.name, city.region, city.country].filter(Boolean).join(', ');
+  }
+
+  chooseCity(city: CityResult): void {
+    if (city.type !== 'city' || city.latitude === null || city.longitude === null) {
+      this.destinationError.set('Selecione uma cidade válida com coordenadas.');
+      return;
+    }
+
+    this.selectedCity.set(city);
+    this.destinationError.set('');
+    this.form.patchValue({
+      latitude: city.latitude,
+      longitude: city.longitude,
     });
   }
 
@@ -61,27 +162,105 @@ export class TripForm {
   }
 
   submit(): void {
-    if (this.form.invalid) {
+    const city = this.selectedCity();
+
+    if (this.form.invalid || !city || city.latitude === null || city.longitude === null) {
       this.form.markAllAsTouched();
+      this.destinationControl.markAsTouched();
+      this.destinationError.set('Pesquise e selecione uma cidade sugerida antes de salvar.');
       return;
     }
 
     const raw = this.form.getRawValue();
 
     this.submitted.emit({
-      destination_city: raw.destination_city,
-      destination_country: raw.destination_country,
-      latitude: Number(raw.latitude),
-      longitude: Number(raw.longitude),
-      start_date: raw.start_date || null,
-      end_date: raw.end_date || null,
+      destination_city: city.name || '',
+      destination_country: city.country || '',
+      latitude: city.latitude,
+      longitude: city.longitude,
+      start_date: this.toDatePayload(raw.start_date),
+      end_date: this.toDatePayload(raw.end_date),
       budget: raw.budget || null,
       description: raw.description || null,
       image: this.selectedImage,
     });
   }
 
-  private toDateInput(value: string | null): string {
-    return value ? value.slice(0, 10) : '';
+  private toDateValue(value: string | null): Date | null {
+    return value ? new Date(`${value}T00:00:00`) : null;
+  }
+
+  private toDatePayload(value: Date | string | null | undefined): string | null {
+    if (!value) {
+      return null;
+    }
+
+    if (typeof value === 'string') {
+      return value.slice(0, 10);
+    }
+
+    const offsetDate = new Date(value.getTime() - value.getTimezoneOffset() * 60000);
+    return offsetDate.toISOString().slice(0, 10);
+  }
+
+  private cityOnlySuggestions(query: string, results: CityResult[]): CityResult[] {
+    const normalizedQuery = query.toLowerCase();
+    const curated = curatedCities.filter((city) => `${city.name} ${city.country}`.toLowerCase().includes(normalizedQuery));
+    const cities = results.filter((item) => item.type === 'city' && item.latitude !== null && item.longitude !== null);
+    const seen = new Set<string>();
+
+    return [...curated, ...cities].filter((city) => {
+      const key = `${city.name}-${city.country}`.toLowerCase();
+
+      if (seen.has(key)) {
+        return false;
+      }
+
+      seen.add(key);
+      return true;
+    }).slice(0, 8);
+  }
+
+  private applyStoredDestination(): void {
+    const stored = localStorage.getItem('travel_planner_selected_destination');
+
+    if (!stored || this.selectedCity()) {
+      return;
+    }
+
+    try {
+      const destination = JSON.parse(stored) as {
+        city?: string | null;
+        country?: string | null;
+        latitude?: number | null;
+        longitude?: number | null;
+      };
+
+      if (!destination.city || !destination.country || destination.latitude == null || destination.longitude == null) {
+        return;
+      }
+
+      const city: CityResult = {
+        type: 'city',
+        id: `stored-${destination.city}`,
+        name: destination.city,
+        city: destination.city,
+        country: destination.country,
+        country_code: null,
+        region: null,
+        latitude: Number(destination.latitude),
+        longitude: Number(destination.longitude),
+        population: null,
+      };
+
+      this.selectedCity.set(city);
+      this.destinationControl.setValue(city, { emitEvent: false });
+      this.form.patchValue({
+        latitude: city.latitude,
+        longitude: city.longitude,
+      });
+    } catch {
+      localStorage.removeItem('travel_planner_selected_destination');
+    }
   }
 }

@@ -1,0 +1,28 @@
+.not-found-shell {
+  display: grid;
+  min-height: calc(100dvh - 74px);
+  place-items: center;
+  align-content: center;
+  gap: 14px;
+  padding: clamp(24px, 7vw, 72px);
+  text-align: center;
+}
+
+span {
+  color: var(--accent);
+  font-size: clamp(4rem, 14vw, 9rem);
+  font-weight: 900;
+  line-height: 1;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 4rem);
+}
+
+p {
+  max-width: 520px;
+  margin: 0 0 10px;
+  color: var(--muted);
+  line-height: 1.6;
+}

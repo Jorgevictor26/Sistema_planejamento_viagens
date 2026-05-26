@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\ExportController;
 use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\ItineraryController;
 use App\Http\Controllers\Api\LocationController;
+use App\Http\Controllers\Api\PlaceController;
 use App\Http\Controllers\Api\TripController;
 use App\Http\Controllers\Api\UploadController;
 use App\Http\Controllers\Api\WeatherController;
@@ -18,6 +19,8 @@ Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
 Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 Route::get('/cities/search', [LocationController::class, 'search']);
 Route::get('/weather', [WeatherController::class, 'current']);
+Route::get('/places', [PlaceController::class, 'index']);
+Route::get('/places/nearby', [PlaceController::class, 'nearby']);
 
 Route::middleware(['jwt', 'throttle:60,1'])->group(function (): void {
     Route::post('/logout', [AuthController::class, 'logout']);

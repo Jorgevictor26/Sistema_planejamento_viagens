@@ -1,3 +1,7 @@
 <section class="map-shell" [attr.aria-label]="label()">
-  <iframe [src]="mapUrl()" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  @if (loadError()) {
+    <div class="map-fallback">Mapa indisponível no momento.</div>
+  } @else {
+    <div #mapHost class="leaflet-map"></div>
+  }
 </section>

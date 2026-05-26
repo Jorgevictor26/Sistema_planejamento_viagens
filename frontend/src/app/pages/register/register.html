@@ -1,12 +1,23 @@
-<main class="auth-shell">
-  <section class="auth-copy">
-    <div class="brand-row">
-      <span class="brand-mark">TV</span>
-      <app-theme-toggle />
+<header class="auth-header">
+  <a class="brand" routerLink="/">
+    <span class="brand-mark">T</span>
+    <strong>Travel Planner</strong>
+  </a>
+  <div class="auth-tools">
+    <app-language-toggle />
+    <app-theme-toggle />
+  </div>
+</header>
+
+<main class="auth-shell register-shell">
+  <section class="auth-visual">
+    <div class="photo-panel register-photo" role="img" aria-label="Viajante observando uma paisagem">
+      <div class="photo-copy">
+        <span>Crie sua conta</span>
+        <h1>Comece a desenhar sua proxima rota.</h1>
+        <p>Guarde seus destinos, explore cidades reais e tenha as primeiras pistas do clima antes de montar o roteiro.</p>
+      </div>
     </div>
-    <h1>Comece a desenhar sua proxima rota.</h1>
-    <p>Guarde seus destinos, explore cidades reais e tenha as primeiras pistas do clima antes de montar o roteiro.</p>
-    <div class="travel-photo" role="img" aria-label="Viajante observando uma paisagem"></div>
   </section>
 
   <mat-card class="auth-card" appearance="outlined">
