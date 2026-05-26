@@ -7,7 +7,7 @@
     <p>{{ language.t('heroText') }}</p>
 
     <div class="hero-actions">
-      <button mat-flat-button color="primary" type="button" (click)="authRequested.emit()">{{ language.t('heroStart') }}</button>
+      <a mat-flat-button color="primary" routerLink="/trips/new">{{ language.t('createTrip') }}</a>
       <button class="explore-button" mat-stroked-button type="button" (click)="exploreDestinations()">{{ language.t('heroExplore') }}</button>
     </div>
   </div>
@@ -33,15 +33,15 @@
           <mat-option [value]="city">
             <div class="option">
               <strong>{{ city.name }}, {{ city.country }}</strong>
-              <span>{{ city.region }} · coordenadas guardadas automaticamente</span>
+              <span>{{ city.region }}</span>
             </div>
           </mat-option>
         }
       </mat-autocomplete>
     </mat-form-field>
 
-    <button mat-flat-button color="primary" type="submit" [disabled]="!canSave()">
-      {{ selectedCity() ? language.t('searchReady') : language.t('searchSelect') }}
+    <button mat-flat-button color="primary" type="submit">
+      {{ language.t('searchReady') }}
     </button>
 
     <p class="hint">{{ error() || language.t('searchHint') }}</p>

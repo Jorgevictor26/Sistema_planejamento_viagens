@@ -1,5 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -10,7 +11,9 @@ import { ItineraryForm } from '../../components/itinerary-form/itinerary-form';
 import { ItineraryList } from '../../components/itinerary-list/itinerary-list';
 import { Timeline } from '../../components/timeline/timeline';
 import { Itinerary, ItineraryPayload, ItineraryService, PaginatedItineraries } from '../../services/itinerary.service';
+import { NonNegativeNumberDirective } from '../../shared/non-negative-number.directive';
 import { Trip, TripService } from '../../services/trip.service';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-itinerary-page',
@@ -21,6 +24,7 @@ import { Trip, TripService } from '../../services/trip.service';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    NonNegativeNumberDirective,
     ItineraryForm,
     ItineraryList,
     Timeline,
@@ -45,11 +49,16 @@ export class ItineraryPage {
 
   readonly filters = this.fb.nonNullable.group({
     trip_id: [''],
-    day: [''],
+    day: ['', [Validators.min(1)]],
     q: [''],
   });
 
   constructor() {
+    this.filters.valueChanges.pipe(
+      debounceTime(350),
+      distinctUntilChanged((previous, current) => JSON.stringify(previous) === JSON.stringify(current)),
+      takeUntilDestroyed(),
+    ).subscribe(() => this.loadItineraries());
     this.loadTrips();
     this.loadItineraries();
   }
@@ -62,6 +71,11 @@ export class ItineraryPage {
   }
 
   loadItineraries(page = 1): void {
+    if (this.filters.invalid) {
+      this.filters.markAllAsTouched();
+      return;
+    }
+
     this.loading.set(true);
     this.error.set('');
 
@@ -110,7 +124,7 @@ export class ItineraryPage {
       trip_id: '',
       day: '',
       q: '',
-    });
+    }, { emitEvent: false });
     this.loadItineraries();
   }
 }

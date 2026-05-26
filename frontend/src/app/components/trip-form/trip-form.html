@@ -21,7 +21,7 @@
           <mat-option [value]="city">
             <div class="option">
               <strong>{{ city.name }}, {{ city.country }}</strong>
-              <span>{{ city.region }} · coordenadas automáticas</span>
+              <span>{{ city.region }}</span>
             </div>
           </mat-option>
         }
@@ -37,30 +37,42 @@
         <div>
           <span>Destino selecionado</span>
           <strong>{{ city.name }}, {{ city.country }}</strong>
-          <small>Coordenadas salvas de forma oculta para mapa, clima e locais próximos.</small>
+          <small>Coordenadas salvas de forma oculta para mapa e clima.</small>
         </div>
-        <app-weather-widget [destination]="city" />
+        <app-weather-widget [destination]="city" [showPlaces]="false" />
       </div>
     }
 
     <div class="form-grid">
       <mat-form-field appearance="outline">
         <mat-label>Data inicial</mat-label>
-        <input matInput [matDatepicker]="startPicker" formControlName="start_date">
+        <input matInput [matDatepicker]="startPicker" [min]="today" formControlName="start_date" (click)="startPicker.open()" (focus)="startPicker.open()">
         <mat-datepicker-toggle matIconSuffix [for]="startPicker" />
         <mat-datepicker #startPicker />
+        @if (form.hasError('startDatePast')) {
+          <mat-error>A viagem não pode começar numa data passada.</mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Data final</mat-label>
-        <input matInput [matDatepicker]="endPicker" formControlName="end_date">
+        <input matInput [matDatepicker]="endPicker" [min]="today" formControlName="end_date" (click)="endPicker.open()" (focus)="endPicker.open()">
         <mat-datepicker-toggle matIconSuffix [for]="endPicker" />
         <mat-datepicker #endPicker />
+        @if (form.hasError('endDatePast')) {
+          <mat-error>A viagem não pode terminar numa data passada.</mat-error>
+        }
+        @if (form.hasError('endBeforeStart')) {
+          <mat-error>A data final deve ser depois da data inicial.</mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Orçamento em Kwanza (AOA)</mat-label>
-        <input matInput type="number" min="0" formControlName="budget">
+        <input matInput type="number" min="0" [appNonNegativeNumber]="0" formControlName="budget">
+        @if (form.controls.budget.touched && form.controls.budget.hasError('min')) {
+          <mat-error>O orçamento não pode ser negativo.</mat-error>
+        }
       </mat-form-field>
 
       <div class="upload-field">

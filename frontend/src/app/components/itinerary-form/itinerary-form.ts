@@ -7,11 +7,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 
 import { activityExamples, Itinerary, ItineraryPayload } from '../../services/itinerary.service';
+import { NonNegativeNumberDirective } from '../../shared/non-negative-number.directive';
 import { Trip } from '../../services/trip.service';
 
 @Component({
   selector: 'app-itinerary-form',
-  imports: [ReactiveFormsModule, MatButtonModule, MatCardModule, MatFormFieldModule, MatInputModule, MatSelectModule],
+  imports: [ReactiveFormsModule, MatButtonModule, MatCardModule, MatFormFieldModule, MatInputModule, MatSelectModule, NonNegativeNumberDirective],
   templateUrl: './itinerary-form.html',
   styleUrl: './itinerary-form.scss',
 })

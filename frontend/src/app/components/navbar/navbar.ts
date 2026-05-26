@@ -1,4 +1,4 @@
-import { Component, HostListener, inject, output, signal } from '@angular/core';
+import { Component, HostListener, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 
@@ -15,7 +15,6 @@ import { ThemeToggle } from '../../shared/theme-toggle/theme-toggle';
 export class Navbar {
   readonly auth = inject(AuthService);
   readonly language = inject(LanguageService);
-  readonly authRequested = output<void>();
   readonly scrolled = signal(false);
   readonly menuOpen = signal(false);
 
@@ -28,8 +27,4 @@ export class Navbar {
     this.menuOpen.set(false);
   }
 
-  openAuthModal(): void {
-    this.closeMenu();
-    this.authRequested.emit();
-  }
 }

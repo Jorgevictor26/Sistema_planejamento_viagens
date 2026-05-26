@@ -1,5 +1,7 @@
 import { Component, HostListener, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 import { AuthService } from '../../services/auth.service';
 import { CurrencyService, AppCurrency } from '../../services/currency.service';
@@ -19,9 +21,10 @@ export class PrivateLayout {
   readonly sidebarHidden = signal(false);
   readonly drawerOpen = signal(false);
   readonly userMenuOpen = signal(false);
+  private readonly tripSearches = new Subject<string>();
 
   readonly navItems = [
-    { label: 'Início', icon: '⌂', link: '/' },
+    { label: 'Início', icon: '⌂', link: '/home' },
     { label: 'Dashboard', icon: '◫', link: '/dashboard' },
     { label: 'Minhas Viagens', icon: '⌖', link: '/trips' },
     { label: 'Roteiro', icon: '☷', link: '/itinerary' },
@@ -31,6 +34,12 @@ export class PrivateLayout {
   ];
 
   constructor() {
+    this.tripSearches.pipe(
+      debounceTime(350),
+      distinctUntilChanged(),
+      takeUntilDestroyed(),
+    ).subscribe((value) => this.searchTrips(value));
+
     if (this.auth.isAuthenticated() && !this.auth.currentUser()) {
       this.auth.me().subscribe();
     }
@@ -58,10 +67,15 @@ export class PrivateLayout {
     const query = value.trim();
 
     if (!query) {
+      void this.router.navigate(['/trips']);
       return;
     }
 
     void this.router.navigate(['/trips'], { queryParams: { q: query } });
+  }
+
+  onSearchInput(value: string): void {
+    this.tripSearches.next(value);
   }
 
   initials(): string {

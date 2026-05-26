@@ -3,11 +3,72 @@
   min-height: 100dvh;
 }
 
+.how-it-works {
+  display: grid;
+  gap: 22px;
+  padding: clamp(38px, 6vw, 72px) clamp(20px, 5vw, 64px);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--surface-alt) 72%, transparent), var(--background));
+}
+
+.section-heading {
+  display: grid;
+  gap: 8px;
+  max-width: 780px;
+}
+
+.section-heading span {
+  color: var(--accent);
+  font-size: 0.82rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.section-heading h2 {
+  margin: 0;
+  max-width: 760px;
+  font-size: clamp(1.8rem, 3.6vw, 3rem);
+  line-height: 1.05;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.steps article {
+  display: grid;
+  align-content: start;
+  min-height: 180px;
+  gap: 10px;
+  border: 1px solid color-mix(in srgb, var(--border) 82%, transparent);
+  border-radius: 8px;
+  padding: clamp(18px, 2.4vw, 24px);
+  background: var(--surface);
+  box-shadow: 0 18px 46px rgba(15, 23, 42, 0.08);
+}
+
+.steps article span {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--success) 16%, var(--surface));
+  color: var(--success);
+  font-weight: 900;
+}
+
+.steps strong {
+  font-size: 1.08rem;
+}
+
 .recommendations {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
-  padding: 0 clamp(20px, 5vw, 64px) clamp(50px, 7vw, 90px);
+  padding: 0 clamp(20px, 5vw, 64px) clamp(42px, 6vw, 70px);
   background: var(--background);
 }
 
@@ -16,7 +77,7 @@
   gap: 10px;
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 20px;
+  padding: 18px;
   background: var(--surface);
   transition: transform 180ms ease, box-shadow 180ms ease;
 }
@@ -53,20 +114,6 @@
   background: rgba(3, 7, 18, 0.48);
   backdrop-filter: blur(12px);
   animation: fade-in 180ms ease both;
-}
-
-.auth-modal {
-  position: relative;
-  display: grid;
-  gap: 18px;
-  width: min(620px, 100%);
-  border: 1px solid color-mix(in srgb, var(--border) 68%, transparent);
-  border-radius: 8px;
-  padding: clamp(22px, 4vw, 34px);
-  background:
-    linear-gradient(135deg, color-mix(in srgb, var(--surface) 92%, var(--accent)), var(--surface));
-  box-shadow: 0 30px 90px rgba(2, 8, 23, 0.34);
-  animation: modal-in 220ms ease both;
 }
 
 .details-modal {
@@ -145,50 +192,6 @@ p {
   line-height: 1.7;
 }
 
-.benefits {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.benefits span {
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 8px 11px;
-  background: color-mix(in srgb, var(--surface) 80%, var(--accent));
-  font-size: 0.86rem;
-  font-weight: 800;
-}
-
-.modal-actions {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.modal-actions a,
-.modal-actions button {
-  display: grid;
-  min-height: 44px;
-  place-items: center;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 10px;
-  color: var(--text);
-  background: var(--surface);
-  font: inherit;
-  font-weight: 900;
-  text-align: center;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.modal-actions .primary {
-  border-color: var(--accent);
-  background: var(--accent);
-  color: var(--accent-contrast);
-}
-
 @keyframes fade-in {
   from {
     opacity: 0;
@@ -208,10 +211,7 @@ p {
 }
 
 @media (max-width: 620px) {
-  .modal-actions {
-    grid-template-columns: 1fr;
-  }
-
+  .steps,
   .recommendations {
     grid-template-columns: 1fr;
   }

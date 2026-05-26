@@ -1,6 +1,6 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -12,6 +12,7 @@ import { catchError, debounceTime, distinctUntilChanged, map, Observable, of, st
 
 import { CityResult, LocationService } from '../../services/location.service';
 import { Trip, TripPayload } from '../../services/trip.service';
+import { NonNegativeNumberDirective } from '../../shared/non-negative-number.directive';
 import { UploadBox } from '../upload-box/upload-box';
 import { WeatherWidget } from '../weather-widget/weather-widget';
 
@@ -54,6 +55,7 @@ const curatedCities: CityResult[] = [
     MatFormFieldModule,
     MatInputModule,
     MatNativeDateModule,
+    NonNegativeNumberDirective,
     UploadBox,
     WeatherWidget,
   ],
@@ -72,6 +74,7 @@ export class TripForm {
   readonly destinationControl = this.fb.nonNullable.control<string | CityResult>('', [Validators.required]);
   readonly destinationError = signal('');
   readonly canSubmit = computed(() => this.form.valid && Boolean(this.selectedCity()));
+  readonly today = new Date(new Date().setHours(0, 0, 0, 0));
 
   selectedImage: File | null = null;
 
@@ -82,7 +85,7 @@ export class TripForm {
     end_date: [null as Date | string | null],
     budget: [0, [Validators.min(0)]],
     description: [''],
-  });
+  }, { validators: [this.tripDatesValidator.bind(this)] });
 
   readonly cities$: Observable<CityResult[]> = this.destinationControl.valueChanges.pipe(
     startWith(''),
@@ -108,7 +111,6 @@ export class TripForm {
       const trip = this.trip();
 
       if (!trip) {
-        this.applyStoredDestination();
         return;
       }
 
@@ -203,6 +205,34 @@ export class TripForm {
     return offsetDate.toISOString().slice(0, 10);
   }
 
+  private tripDatesValidator(control: AbstractControl): ValidationErrors | null {
+    const start = this.normalizeDate(control.get('start_date')?.value);
+    const end = this.normalizeDate(control.get('end_date')?.value);
+
+    if (start && start < this.today) {
+      return { startDatePast: true };
+    }
+
+    if (end && end < this.today) {
+      return { endDatePast: true };
+    }
+
+    if (start && end && end < start) {
+      return { endBeforeStart: true };
+    }
+
+    return null;
+  }
+
+  private normalizeDate(value: Date | string | null | undefined): Date | null {
+    if (!value) {
+      return null;
+    }
+
+    const date = typeof value === 'string' ? new Date(`${value.slice(0, 10)}T00:00:00`) : value;
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  }
+
   private cityOnlySuggestions(query: string, results: CityResult[]): CityResult[] {
     const normalizedQuery = query.toLowerCase();
     const curated = curatedCities.filter((city) => `${city.name} ${city.country}`.toLowerCase().includes(normalizedQuery));
@@ -221,46 +251,4 @@ export class TripForm {
     }).slice(0, 8);
   }
 
-  private applyStoredDestination(): void {
-    const stored = localStorage.getItem('travel_planner_selected_destination');
-
-    if (!stored || this.selectedCity()) {
-      return;
-    }
-
-    try {
-      const destination = JSON.parse(stored) as {
-        city?: string | null;
-        country?: string | null;
-        latitude?: number | null;
-        longitude?: number | null;
-      };
-
-      if (!destination.city || !destination.country || destination.latitude == null || destination.longitude == null) {
-        return;
-      }
-
-      const city: CityResult = {
-        type: 'city',
-        id: `stored-${destination.city}`,
-        name: destination.city,
-        city: destination.city,
-        country: destination.country,
-        country_code: null,
-        region: null,
-        latitude: Number(destination.latitude),
-        longitude: Number(destination.longitude),
-        population: null,
-      };
-
-      this.selectedCity.set(city);
-      this.destinationControl.setValue(city, { emitEvent: false });
-      this.form.patchValue({
-        latitude: city.latitude,
-        longitude: city.longitude,
-      });
-    } catch {
-      localStorage.removeItem('travel_planner_selected_destination');
-    }
-  }
 }

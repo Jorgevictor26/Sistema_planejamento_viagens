@@ -57,7 +57,7 @@
         <strong>Encontrar atividades</strong>
       </div>
     </div>
-    <form [formGroup]="filters" (ngSubmit)="loadItineraries()">
+    <form [formGroup]="filters">
       <mat-form-field appearance="outline">
         <mat-label>Viagem</mat-label>
         <mat-select formControlName="trip_id">
@@ -70,7 +70,10 @@
 
       <mat-form-field appearance="outline">
         <mat-label>Dia</mat-label>
-        <input matInput type="number" min="1" formControlName="day">
+        <input matInput type="number" min="1" [appNonNegativeNumber]="1" formControlName="day">
+        @if (filters.controls.day.touched && filters.controls.day.hasError('min')) {
+          <mat-error>O dia deve ser maior que zero.</mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="outline">
@@ -79,7 +82,6 @@
       </mat-form-field>
 
       <div class="filter-actions">
-        <button mat-flat-button color="primary" type="submit">Filtrar</button>
         <button mat-stroked-button type="button" (click)="clearFilters()">Limpar</button>
       </div>
     </form>

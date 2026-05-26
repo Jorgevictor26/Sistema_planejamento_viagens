@@ -1,4 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -7,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 import { ExpenseChart } from '../../components/expense-chart/expense-chart';
 import { ExpenseForm } from '../../components/expense-form/expense-form';
@@ -77,6 +79,11 @@ export class ExpensesPage {
   });
 
   constructor() {
+    this.filters.valueChanges.pipe(
+      debounceTime(350),
+      distinctUntilChanged((previous, current) => JSON.stringify(previous) === JSON.stringify(current)),
+      takeUntilDestroyed(),
+    ).subscribe(() => this.loadExpenses());
     this.loadTrips();
     this.loadExpenses();
   }
@@ -144,7 +151,7 @@ export class ExpensesPage {
       category: '',
       from: null,
       to: null,
-    });
+    }, { emitEvent: false });
     this.loadExpenses();
   }
 

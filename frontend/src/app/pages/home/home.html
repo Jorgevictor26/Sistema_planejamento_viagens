@@ -1,5 +1,32 @@
-<app-navbar (authRequested)="authModalOpen.set(true)" />
-<app-hero-search (destinationSelected)="openDestinationDetails($event)" (authRequested)="authModalOpen.set(true)" />
+<app-navbar />
+<app-hero-search (destinationSelected)="openDestinationDetails($event)" />
+
+<section class="how-it-works" id="sobre" [attr.aria-label]="language.t('howWorksLabel')">
+  <div class="section-heading">
+    <span>{{ language.t('howWorksEyebrow') }}</span>
+    <h2>{{ language.t('howWorksTitle') }}</h2>
+    <p>{{ language.t('howWorksText') }}</p>
+  </div>
+
+  <div class="steps">
+    <article>
+      <span>01</span>
+      <strong>{{ language.t('howWorksSearchTitle') }}</strong>
+      <p>{{ language.t('howWorksSearchText') }}</p>
+    </article>
+    <article>
+      <span>02</span>
+      <strong>{{ language.t('howWorksCompareTitle') }}</strong>
+      <p>{{ language.t('howWorksCompareText') }}</p>
+    </article>
+    <article>
+      <span>03</span>
+      <strong>{{ language.t('howWorksPlanTitle') }}</strong>
+      <p>{{ language.t('howWorksPlanText') }}</p>
+    </article>
+  </div>
+</section>
+
 <app-popular-destinations (selected)="openDestinationDetails($event)" />
 
 <section class="recommendations" [attr.aria-label]="language.t('recommendationsLabel')">
@@ -40,36 +67,4 @@
       </section>
     </div>
   }
-}
-
-@if (authModalOpen()) {
-  <div class="modal-backdrop" (click)="authModalOpen.set(false)">
-    <section class="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-title" (click)="$event.stopPropagation()">
-      <button class="close" type="button" aria-label="Fechar" (click)="authModalOpen.set(false)">×</button>
-
-      <span class="eyebrow">{{ language.language() === 'en' ? 'Free account' : 'Conta gratuita' }}</span>
-      <h2 id="auth-title">
-        {{ language.language() === 'en' ? 'Planning is better when your trip is saved.' : 'Planeje melhor quando a sua viagem fica guardada.' }}
-      </h2>
-      <p>
-        {{ language.language() === 'en'
-          ? 'Create an account to save trips, track expenses, build itineraries, keep favorites and check weather and maps whenever you return.'
-          : 'Crie uma conta para salvar viagens, controlar despesas, montar roteiros, guardar favoritos e consultar clima e mapas sempre que voltar.' }}
-      </p>
-
-      <div class="benefits">
-        <span>{{ language.language() === 'en' ? 'Saved trips' : 'Viagens salvas' }}</span>
-        <span>{{ language.language() === 'en' ? 'Expenses' : 'Despesas' }}</span>
-        <span>{{ language.language() === 'en' ? 'Itineraries' : 'Roteiros' }}</span>
-        <span>{{ language.language() === 'en' ? 'Favorites' : 'Favoritos' }}</span>
-        <span>{{ language.language() === 'en' ? 'Weather and maps' : 'Clima e mapas' }}</span>
-      </div>
-
-      <div class="modal-actions">
-        <a routerLink="/login" class="secondary" (click)="authModalOpen.set(false)">{{ language.language() === 'en' ? 'Log in' : 'Iniciar sessão' }}</a>
-        <a routerLink="/register" class="primary" (click)="authModalOpen.set(false)">{{ language.language() === 'en' ? 'Sign up' : 'Criar conta' }}</a>
-        <button type="button" (click)="continueAsVisitor()">{{ language.language() === 'en' ? 'Continue as visitor' : 'Continuar como visitante' }}</button>
-      </div>
-    </section>
-  </div>
 }

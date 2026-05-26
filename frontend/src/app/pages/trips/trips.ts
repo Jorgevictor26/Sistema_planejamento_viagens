@@ -1,4 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -7,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 import { TripList } from '../../components/trip-list/trip-list';
 import { PaginatedTrips, Trip, TripService } from '../../services/trip.service';
@@ -49,6 +51,11 @@ export class TripsPage {
   constructor() {
     const query = this.route.snapshot.queryParamMap.get('q') || '';
     this.filters.patchValue({ q: query });
+    this.filters.valueChanges.pipe(
+      debounceTime(350),
+      distinctUntilChanged((previous, current) => JSON.stringify(previous) === JSON.stringify(current)),
+      takeUntilDestroyed(),
+    ).subscribe(() => this.load());
     this.load();
   }
 
@@ -74,7 +81,7 @@ export class TripsPage {
       to: null,
       sort: 'created_at',
       direction: 'desc',
-    });
+    }, { emitEvent: false });
     this.load();
   }
 

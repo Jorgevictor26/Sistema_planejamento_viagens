@@ -69,7 +69,7 @@
         <strong>Filtrar lista</strong>
       </div>
     </div>
-    <form [formGroup]="filters" (ngSubmit)="loadExpenses()">
+    <form [formGroup]="filters">
       <mat-form-field appearance="outline">
         <mat-label>Viagem</mat-label>
         <mat-select formControlName="trip_id">
@@ -92,20 +92,19 @@
 
       <mat-form-field appearance="outline">
         <mat-label>De</mat-label>
-        <input matInput [matDatepicker]="fromPicker" formControlName="from">
+        <input matInput [matDatepicker]="fromPicker" formControlName="from" (click)="fromPicker.open()" (focus)="fromPicker.open()">
         <mat-datepicker-toggle matIconSuffix [for]="fromPicker" />
         <mat-datepicker #fromPicker />
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Ate</mat-label>
-        <input matInput [matDatepicker]="toPicker" formControlName="to">
+        <input matInput [matDatepicker]="toPicker" formControlName="to" (click)="toPicker.open()" (focus)="toPicker.open()">
         <mat-datepicker-toggle matIconSuffix [for]="toPicker" />
         <mat-datepicker #toPicker />
       </mat-form-field>
 
       <div class="filter-actions">
-        <button mat-flat-button color="primary" type="submit">Filtrar</button>
         <button mat-stroked-button type="button" (click)="clearFilters()">Limpar</button>
       </div>
     </form>

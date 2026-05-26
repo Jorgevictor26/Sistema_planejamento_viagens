@@ -1,5 +1,5 @@
 <mat-card class="destination-card" appearance="outlined">
-  <img [src]="destination().image" [alt]="destination().name">
+  <img [src]="destination().image" [alt]="destination().name" (error)="useFallbackImage($event)">
   <mat-card-content>
     <div class="meta">
       <span>{{ destination().country }}</span>

@@ -1,6 +1,6 @@
 <section class="private-shell" [class.sidebar-hidden]="sidebarHidden()" [class.drawer-open]="drawerOpen()">
   <aside class="sidebar">
-    <a class="brand" routerLink="/">
+    <a class="brand" routerLink="/home">
       <span>T</span>
       <strong>Travel Planner</strong>
     </a>
@@ -10,7 +10,7 @@
         <a
           [routerLink]="item.link"
           routerLinkActive="active"
-          [routerLinkActiveOptions]="{ exact: item.link === '/' || item.link === '/dashboard' }"
+          [routerLinkActiveOptions]="{ exact: item.link === '/home' || item.link === '/dashboard' }"
           (click)="drawerOpen.set(false)"
         >
           <b aria-hidden="true">{{ item.icon }}</b>
@@ -39,6 +39,7 @@
             type="text"
             placeholder="Pesquisar viagem..."
             autocomplete="off"
+            (input)="onSearchInput(globalSearch.value)"
             (keydown.enter)="searchTrips(globalSearch.value)"
           >
         </div>
@@ -49,26 +50,28 @@
           }
         </select>
 
-        <app-language-toggle />
-        <app-theme-toggle />
+        <div class="account-tools">
+          <app-language-toggle />
+          <app-theme-toggle />
 
-        <div class="user-menu" (click)="$event.stopPropagation()">
-          <button class="avatar-button" type="button" (click)="userMenuOpen.set(!userMenuOpen())">
-            @if (auth.currentUser()?.avatar) {
-              <img [src]="auth.currentUser()?.avatar" alt="Avatar">
-            } @else {
-              <span>{{ initials() }}</span>
+          <div class="user-menu" (click)="$event.stopPropagation()">
+            <button class="avatar-button" type="button" (click)="userMenuOpen.set(!userMenuOpen())">
+              @if (auth.currentUser()?.avatar) {
+                <img [src]="auth.currentUser()?.avatar" alt="Avatar">
+              } @else {
+                <span>{{ initials() }}</span>
+              }
+            </button>
+
+            @if (userMenuOpen()) {
+              <div class="dropdown">
+                <strong>{{ auth.currentUser()?.name || 'Utilizador' }}</strong>
+                <span>{{ auth.currentUser()?.email || 'Sessão ativa' }}</span>
+                <a routerLink="/profile">Perfil</a>
+                <button type="button" (click)="logout()">Terminar sessão</button>
+              </div>
             }
-          </button>
-
-          @if (userMenuOpen()) {
-            <div class="dropdown">
-              <strong>{{ auth.currentUser()?.name || 'Utilizador' }}</strong>
-              <span>{{ auth.currentUser()?.email || 'Sessão ativa' }}</span>
-              <a routerLink="/profile">Perfil</a>
-              <button type="button" (click)="logout()">Terminar sessão</button>
-            </div>
-          }
+          </div>
         </div>
       </div>
     </header>

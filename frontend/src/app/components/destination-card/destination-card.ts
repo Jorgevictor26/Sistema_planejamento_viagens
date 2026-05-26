@@ -24,4 +24,10 @@ export class DestinationCard {
   readonly language = inject(LanguageService);
   readonly destination = input.required<RichDestination>();
   readonly selected = output<CityResult>();
+
+  useFallbackImage(event: Event): void {
+    const image = event.target as HTMLImageElement;
+
+    image.src = 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=82';
+  }
 }

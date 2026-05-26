@@ -115,7 +115,8 @@ dd {
   font-weight: 900;
 }
 
-.places-section {
+.places-section,
+.itinerary-section {
   display: grid;
   gap: 18px;
 }
@@ -142,6 +143,53 @@ dd {
 
 .section-heading p,
 .place-card small {
+  color: var(--muted);
+}
+
+.itinerary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.itinerary-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+  background: var(--surface);
+}
+
+.itinerary-item time {
+  display: grid;
+  place-items: center;
+  min-width: 72px;
+  border-radius: 8px;
+  padding: 10px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.itinerary-item time span {
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.itinerary-item time strong {
+  font-size: 1.1rem;
+}
+
+.itinerary-item > div {
+  display: grid;
+  align-content: center;
+  gap: 5px;
+}
+
+.itinerary-item small,
+.itinerary-item p {
   color: var(--muted);
 }
 
@@ -189,6 +237,71 @@ dd {
   font-size: 0.8rem;
 }
 
+.place-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.place-actions button {
+  width: 100%;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(2, 8, 23, 0.58);
+}
+
+.itinerary-modal {
+  position: relative;
+  display: grid;
+  gap: 14px;
+  width: min(100%, 560px);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: clamp(20px, 4vw, 30px);
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 28px 90px color-mix(in srgb, #020817 42%, transparent);
+}
+
+.itinerary-modal h2 {
+  padding-right: 44px;
+}
+
+.itinerary-modal form {
+  display: grid;
+  gap: 12px;
+}
+
+.close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-alt);
+  color: var(--text);
+  cursor: pointer;
+  font-size: 1.3rem;
+  font-weight: 900;
+}
+
+.modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
 .skeleton {
   min-height: 240px;
   background: linear-gradient(90deg, var(--surface-alt), color-mix(in srgb, var(--surface-alt) 55%, #fff), var(--surface-alt));
@@ -209,7 +322,8 @@ dd {
   }
 
   .details-grid,
-  .place-grid {
+  .place-grid,
+  .itinerary-grid {
     grid-template-columns: 1fr;
   }
 }

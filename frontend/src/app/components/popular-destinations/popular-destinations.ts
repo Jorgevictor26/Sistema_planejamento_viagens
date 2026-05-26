@@ -136,7 +136,7 @@ export class PopularDestinations {
       latitude: -6.1659,
       longitude: 39.2026,
       population: 501459,
-      image: 'https://images.unsplash.com/photo-1586861256632-52a6bf72f77e?auto=format&fit=crop&w=900&q=82',
+      image: 'https://images.unsplash.com/photo-1540202404-a2f29016b523?auto=format&fit=crop&w=900&q=82',
       tagline: 'Águas turquesa, Stone Town e sabores do Índico.',
       climate: '30 C · tropical',
       restaurants: ['The Rock', 'Lukmaan', 'Emerson Spice'],

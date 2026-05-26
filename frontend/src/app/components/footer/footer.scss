@@ -7,9 +7,9 @@ footer {
   border-top: 1px solid var(--border);
   padding: clamp(36px, 6vw, 70px) clamp(20px, 5vw, 64px) 28px;
   background:
-    linear-gradient(135deg, color-mix(in srgb, var(--accent) 10%, transparent), transparent 42%),
-    var(--surface);
-  color: var(--muted);
+    linear-gradient(135deg, rgba(13, 148, 136, 0.24), transparent 42%),
+    #10221f;
+  color: rgba(233, 247, 242, 0.74);
 }
 
 .footer-brand {
@@ -36,7 +36,7 @@ address,
 }
 
 strong {
-  color: var(--text);
+  color: #ffffff;
   font-size: 1.05rem;
 }
 
@@ -46,14 +46,14 @@ p {
 }
 
 a {
-  color: var(--muted);
+  color: rgba(233, 247, 242, 0.78);
   font-weight: 800;
   text-decoration: none;
   transition: color 180ms ease, transform 180ms ease;
 }
 
 a:hover {
-  color: var(--accent);
+  color: #7dd3fc;
   transform: translateX(2px);
 }
 
@@ -63,9 +63,9 @@ address {
 
 small {
   grid-column: 1 / -1;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
   padding-top: 20px;
-  color: var(--muted);
+  color: rgba(233, 247, 242, 0.62);
 }
 
 @media (max-width: 640px) {

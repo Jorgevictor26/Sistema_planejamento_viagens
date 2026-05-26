@@ -27,7 +27,7 @@
         <a mat-flat-button color="primary" routerLink="/trips" (click)="closeMenu()">Minhas viagens</a>
       } @else {
         <a mat-button routerLink="/login" (click)="closeMenu()">{{ language.t('navLogin') }}</a>
-        <button mat-flat-button color="primary" type="button" (click)="openAuthModal()">{{ language.t('navRegister') }}</button>
+        <a mat-flat-button color="primary" routerLink="/register" (click)="closeMenu()">{{ language.t('navRegister') }}</a>
       }
     </div>
   </div>

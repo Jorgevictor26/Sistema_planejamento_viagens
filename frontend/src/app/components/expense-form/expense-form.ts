@@ -1,5 +1,5 @@
 import { Component, effect, inject, input, output } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -9,11 +9,12 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 
 import { Expense, ExpenseCategory, ExpensePayload, expenseCategories } from '../../services/expense.service';
+import { NonNegativeNumberDirective } from '../../shared/non-negative-number.directive';
 import { Trip } from '../../services/trip.service';
 
 @Component({
   selector: 'app-expense-form',
-  imports: [ReactiveFormsModule, MatButtonModule, MatCardModule, MatDatepickerModule, MatFormFieldModule, MatInputModule, MatNativeDateModule, MatSelectModule],
+  imports: [ReactiveFormsModule, MatButtonModule, MatCardModule, MatDatepickerModule, MatFormFieldModule, MatInputModule, MatNativeDateModule, MatSelectModule, NonNegativeNumberDirective],
   templateUrl: './expense-form.html',
   styleUrl: './expense-form.scss',
 })
@@ -27,13 +28,14 @@ export class ExpenseForm {
   readonly cancelled = output<void>();
 
   readonly categories = expenseCategories;
+  readonly today = new Date(new Date().setHours(0, 0, 0, 0));
 
   readonly form = this.fb.nonNullable.group({
     trip_id: [0, [Validators.required, Validators.min(1)]],
     category: ['hotel' as ExpenseCategory, [Validators.required]],
     amount: [0, [Validators.required, Validators.min(0.01)]],
     description: [''],
-    expense_date: [null as Date | string | null],
+    expense_date: [null as Date | string | null, [this.notFutureDateValidator.bind(this)]],
   });
 
   constructor() {
@@ -94,5 +96,18 @@ export class ExpenseForm {
 
     const offsetDate = new Date(value.getTime() - value.getTimezoneOffset() * 60000);
     return offsetDate.toISOString().slice(0, 10);
+  }
+
+  private notFutureDateValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value as Date | string | null;
+
+    if (!value) {
+      return null;
+    }
+
+    const date = typeof value === 'string' ? new Date(`${value.slice(0, 10)}T00:00:00`) : value;
+    const normalized = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+    return normalized > this.today ? { futureDate: true } : null;
   }
 }

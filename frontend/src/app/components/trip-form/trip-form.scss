@@ -92,19 +92,6 @@ form {
   font-size: clamp(2rem, 4vw, 3rem);
 }
 
-.destination-preview ::ng-deep .places {
-  margin-top: 14px;
-}
-
-.destination-preview ::ng-deep .place-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.destination-preview ::ng-deep .place-card img {
-  aspect-ratio: 16 / 8;
-}
-
 .option {
   display: grid;
   gap: 2px;
@@ -142,8 +129,7 @@ mat-form-field {
     grid-template-columns: 1fr;
   }
 
-  .destination-preview ::ng-deep .insight-grid,
-  .destination-preview ::ng-deep .place-grid {
+  .destination-preview ::ng-deep .insight-grid {
     grid-template-columns: 1fr;
   }
 

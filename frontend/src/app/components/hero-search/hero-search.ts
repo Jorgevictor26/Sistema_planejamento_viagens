@@ -1,10 +1,11 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, computed, inject, output, signal } from '@angular/core';
+import { Component, inject, output, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { RouterLink } from '@angular/router';
 import { catchError, debounceTime, distinctUntilChanged, map, Observable, of, startWith, switchMap } from 'rxjs';
 
 import { LanguageService } from '../../services/language.service';
@@ -58,6 +59,7 @@ const curatedCities: CityResult[] = [
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
+    RouterLink,
   ],
   templateUrl: './hero-search.html',
   styleUrl: './hero-search.scss',
@@ -67,12 +69,9 @@ export class HeroSearch {
   readonly language = inject(LanguageService);
 
   readonly destinationSelected = output<CityResult>();
-  readonly authRequested = output<void>();
   readonly selectedCity = signal<CityResult | null>(null);
   readonly error = signal('');
   readonly searchControl = new FormControl<string | CityResult>('', { nonNullable: true });
-
-  readonly canSave = computed(() => Boolean(this.selectedCity()));
 
   readonly suggestions$: Observable<CityResult[]> = this.searchControl.valueChanges.pipe(
     startWith(''),
@@ -107,13 +106,49 @@ export class HeroSearch {
   saveDestination(): void {
     const city = this.selectedCity();
 
-    if (!city) {
-      this.error.set(this.language.language() === 'en'
-        ? 'Choose a suggested city before continuing.'
-        : 'Escolha uma cidade sugerida antes de continuar.');
+    if (city) {
+      this.emitDestination(city);
       return;
     }
 
+    const query = this.queryText();
+
+    if (query.length < 2) {
+      this.error.set(this.language.language() === 'en'
+        ? 'Type a destination before searching.'
+        : 'Digite um destino antes de pesquisar.');
+      return;
+    }
+
+    const curatedCity = this.cityOnlySuggestions(query, [])[0];
+
+    if (curatedCity) {
+      this.chooseCity(curatedCity);
+      this.emitDestination(curatedCity);
+      return;
+    }
+
+    this.locations.searchDestinations(query).pipe(
+      map((response) => this.cityOnlySuggestions(query, response.data)[0] || null),
+      catchError(() => of(null)),
+    ).subscribe((foundCity) => {
+      if (!foundCity) {
+        this.error.set(this.language.language() === 'en'
+          ? 'We could not find this destination. Try another city name.'
+          : 'Não encontramos esse destino. Tente outro nome de cidade.');
+        return;
+      }
+
+      this.chooseCity(foundCity);
+      this.emitDestination(foundCity);
+    });
+  }
+
+  exploreDestinations(): void {
+    document.getElementById('destinos')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  private emitDestination(city: CityResult): void {
     localStorage.setItem('travel_planner_selected_destination', JSON.stringify({
       city: city.name,
       country: city.country,
@@ -124,15 +159,17 @@ export class HeroSearch {
     this.destinationSelected.emit(city);
   }
 
-  exploreDestinations(): void {
-    document.getElementById('destinos')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  private queryText(): string {
+    const value = this.searchControl.value;
+
+    return typeof value === 'string' ? value.trim() : `${value.name}, ${value.country}`.trim();
   }
 
   private cityOnlySuggestions(query: string, results: CityResult[]): CityResult[] {
     const cities = results.filter((item) => item.type === 'city' && item.latitude !== null && item.longitude !== null);
-    const normalizedQuery = query.toLowerCase();
+    const normalizedQuery = this.normalizeSearch(query);
     const curated = curatedCities.filter((city) => {
-      const haystack = `${city.name} ${city.country} ${city.region}`.toLowerCase();
+      const haystack = this.normalizeSearch(`${city.name} ${city.country} ${city.region}`);
 
       return haystack.includes(normalizedQuery);
     });
@@ -149,5 +186,15 @@ export class HeroSearch {
       seen.add(key);
       return true;
     }).slice(0, 8);
+  }
+
+  private normalizeSearch(value: string): string {
+    return value
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^\w\s]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .toLowerCase();
   }
 }

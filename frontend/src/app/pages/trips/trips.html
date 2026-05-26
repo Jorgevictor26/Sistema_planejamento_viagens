@@ -8,7 +8,7 @@
   </header>
 
   <mat-card class="filters-card" appearance="outlined">
-    <form [formGroup]="filters" (ngSubmit)="load()">
+    <form [formGroup]="filters">
       <mat-form-field class="country-field" appearance="outline">
         <mat-label>País</mat-label>
         <input matInput formControlName="country" placeholder="Ex.: Angola">
@@ -17,15 +17,14 @@
       <mat-form-field class="period-field" appearance="outline">
         <mat-label>Período</mat-label>
         <mat-date-range-input [rangePicker]="periodPicker">
-          <input matStartDate formControlName="from" placeholder="Data inicial">
-          <input matEndDate formControlName="to" placeholder="Data final">
+          <input matStartDate formControlName="from" placeholder="Data inicial" (click)="periodPicker.open()" (focus)="periodPicker.open()">
+          <input matEndDate formControlName="to" placeholder="Data final" (click)="periodPicker.open()" (focus)="periodPicker.open()">
         </mat-date-range-input>
         <mat-datepicker-toggle matIconSuffix [for]="periodPicker" />
         <mat-date-range-picker #periodPicker />
       </mat-form-field>
 
       <div class="filter-actions">
-        <button mat-flat-button color="primary" type="submit">Filtrar</button>
         <button mat-stroked-button type="button" (click)="clearFilters()">Limpar</button>
       </div>
     </form>

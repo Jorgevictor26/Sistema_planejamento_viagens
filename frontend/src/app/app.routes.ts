@@ -26,6 +26,7 @@ export const routes: Routes = [
     component: PrivateLayout,
     canActivate: [authGuard],
     children: [
+      { path: 'home', component: DashboardPage },
       { path: 'dashboard', component: DashboardPage },
       { path: 'trips', component: TripsPage },
       { path: 'trips/new', component: CreateTripPage },

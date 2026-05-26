@@ -118,6 +118,7 @@ nav {
   align-items: center;
   justify-content: space-between;
   gap: 18px;
+  min-height: 74px;
   border-bottom: 1px solid var(--border);
   padding: 14px clamp(18px, 4vw, 36px);
   background: color-mix(in srgb, var(--background) 86%, transparent);
@@ -133,15 +134,24 @@ nav {
   display: flex;
   align-items: center;
   gap: 10px;
+  width: 100%;
   margin-left: auto;
   min-width: 0;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: flex-end;
+}
+
+.account-tools {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
 }
 
 .nav-search {
   display: flex;
-  flex: 1 1 260px;
+  flex: 0 1 360px;
   align-items: center;
   gap: 8px;
   max-width: 360px;
@@ -304,21 +314,20 @@ select {
 
 @media (max-width: 640px) {
   .private-topbar {
-    align-items: flex-start;
-    flex-wrap: wrap;
+    align-items: center;
+    flex-wrap: nowrap;
   }
 
   .topbar-actions {
-    width: 100%;
+    width: auto;
     justify-content: flex-end;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
   }
 
   .nav-search {
-    order: 10;
-    flex-basis: 100%;
+    flex-basis: 160px;
     max-width: none;
-    min-width: 0;
+    min-width: 120px;
   }
 
   .new-trip {

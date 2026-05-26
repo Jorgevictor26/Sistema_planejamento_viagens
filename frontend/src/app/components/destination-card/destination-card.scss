@@ -1,31 +1,39 @@
 .destination-card {
   overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(116px, 34%) minmax(0, 1fr);
+  height: 100%;
+  min-height: 158px;
   border-radius: 8px;
   background: var(--surface);
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.07);
   transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
 }
 
 .destination-card:hover {
   border-color: color-mix(in srgb, var(--accent) 46%, var(--border));
-  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.12);
-  transform: translateY(-4px);
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.11);
+  transform: translateY(-2px);
 }
 
 img {
   width: 100%;
-  aspect-ratio: 4 / 3;
+  height: 100%;
+  min-height: 158px;
   object-fit: cover;
 }
 
 mat-card-content {
   display: grid;
-  gap: 14px;
-  padding: 18px;
+  grid-template-rows: auto auto auto 1fr;
+  gap: 8px;
+  min-height: 158px;
+  padding: 14px;
 }
 
 .meta {
   display: grid;
-  gap: 4px;
+  gap: 2px;
 }
 
 .meta span,
@@ -34,32 +42,37 @@ p {
 }
 
 .meta strong {
-  font-size: 1.3rem;
+  font-size: 1rem;
+  line-height: 1.15;
 }
 
 p {
   margin: 0;
-  line-height: 1.55;
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 0.86rem;
+  line-height: 1.42;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 6px;
 }
 
 .chips span {
   border-radius: 999px;
-  padding: 7px 10px;
-  background: var(--surface-alt);
+  padding: 5px 8px;
+  background: color-mix(in srgb, var(--surface-alt) 84%, var(--accent));
   color: var(--text);
-  font-size: 0.82rem;
+  font-size: 0.72rem;
   font-weight: 800;
 }
 
 .details {
-  display: grid;
-  gap: 10px;
+  display: none;
 }
 
 .details div {
@@ -76,4 +89,32 @@ small {
 .details strong {
   font-size: 0.92rem;
   line-height: 1.45;
+}
+
+button {
+  align-self: end;
+  justify-self: start;
+  min-width: 120px;
+  min-height: 34px;
+  border-color: transparent !important;
+  background: var(--accent) !important;
+  color: var(--accent-contrast) !important;
+  font-size: 0.82rem;
+  box-shadow: var(--button-shadow);
+}
+
+@media (max-width: 700px) {
+  .destination-card {
+    grid-template-columns: 1fr;
+  }
+
+  img {
+    height: auto;
+    min-height: 0;
+    aspect-ratio: 16 / 8;
+  }
+
+  mat-card-content {
+    min-height: auto;
+  }
 }

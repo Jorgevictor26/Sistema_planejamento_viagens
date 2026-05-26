@@ -41,9 +41,8 @@ nav {
   min-height: 100dvh;
   display: grid;
   grid-template-columns: minmax(320px, 1fr) minmax(320px, 1fr);
-  gap: clamp(24px, 5vw, 64px);
-  align-items: center;
-  padding: clamp(96px, 10vw, 122px) clamp(18px, 5vw, 64px) clamp(24px, 5vw, 54px);
+  align-items: stretch;
+  padding: 78px 0 0;
 }
 
 .brand-mark {
@@ -58,13 +57,13 @@ nav {
 }
 
 .auth-card {
-  width: min(100%, 520px);
-  min-height: 620px;
-  justify-self: center;
+  width: 100%;
+  min-height: calc(100dvh - 78px);
+  justify-self: stretch;
   display: grid;
   align-content: center;
-  border-radius: 8px;
-  padding: clamp(20px, 3vw, 34px);
+  border-radius: 0;
+  padding: clamp(28px, 6vw, 92px);
   border-color: color-mix(in srgb, var(--border) 72%, transparent);
   background:
     linear-gradient(135deg, color-mix(in srgb, var(--accent) 7%, transparent), transparent 36%),
@@ -73,17 +72,32 @@ nav {
   backdrop-filter: blur(16px);
 }
 
+.auth-card mat-card-header,
+.auth-card mat-card-content,
+.auth-card mat-card-actions {
+  width: min(100%, 520px);
+  justify-self: center;
+}
+
+.auth-card mat-card-header {
+  padding: 0 0 8px;
+}
+
+.auth-card mat-card-content {
+  padding: 0;
+}
+
 mat-card-title {
   display: block;
-  font-size: clamp(2rem, 4vw, 3.4rem);
+  font-size: clamp(2rem, 3.3vw, 3rem);
   line-height: 1.05;
   letter-spacing: 0;
 }
 
 form {
   display: grid;
-  gap: 18px;
-  padding-top: 22px;
+  gap: 16px;
+  padding-top: 20px;
 }
 
 mat-form-field,
@@ -93,8 +107,16 @@ button {
 
 :host ::ng-deep .auth-card .mat-mdc-text-field-wrapper {
   border-radius: 8px;
-  background: color-mix(in srgb, var(--surface-alt) 72%, var(--surface));
+  background: color-mix(in srgb, var(--surface-alt) 52%, var(--surface));
   transition: background 180ms ease, box-shadow 180ms ease;
+}
+
+:host ::ng-deep .auth-card .mat-mdc-form-field {
+  --mat-form-field-container-height: 54px;
+}
+
+:host ::ng-deep .auth-card .mat-mdc-form-field-subscript-wrapper {
+  min-height: 0;
 }
 
 :host ::ng-deep .auth-card .mat-mdc-form-field-focus-overlay {
@@ -119,7 +141,7 @@ button {
 }
 
 .auth-card button[type='submit'] {
-  min-height: 48px;
+  min-height: 50px;
   border-radius: 8px;
   font-weight: 900;
   box-shadow: 0 14px 34px color-mix(in srgb, var(--accent) 24%, transparent);
@@ -141,7 +163,7 @@ mat-card-actions {
   display: grid;
   grid-template-columns: 1fr;
   gap: 12px;
-  padding: 14px 16px 4px;
+  padding: 12px 0 0;
 }
 
 a {
@@ -185,9 +207,9 @@ mat-card-actions .register-link:hover {
 }
 
 .auth-visual {
-  width: min(100%, 620px);
-  min-height: 620px;
-  justify-self: center;
+  width: 100%;
+  min-height: calc(100dvh - 78px);
+  justify-self: stretch;
 }
 
 .photo-panel {
@@ -195,8 +217,8 @@ mat-card-actions .register-link:hover {
   overflow: hidden;
   display: grid;
   align-items: end;
-  min-height: 620px;
-  border-radius: 8px;
+  min-height: 100%;
+  border-radius: 0;
   padding: clamp(24px, 4vw, 44px);
   background:
     linear-gradient(180deg, rgba(2, 8, 23, 0.08), rgba(2, 8, 23, 0.72)),
@@ -244,7 +266,7 @@ mat-card-actions .register-link:hover {
 
   .auth-shell {
     grid-template-columns: 1fr;
-    padding-top: 28px;
+    padding-top: 0;
   }
 
   .auth-card {

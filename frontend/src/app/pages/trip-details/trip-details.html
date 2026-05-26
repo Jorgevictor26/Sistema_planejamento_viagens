@@ -49,15 +49,53 @@
         </div>
       </section>
 
+      <section class="itinerary-section">
+        <div class="section-heading">
+          <span>Roteiro desta viagem</span>
+          <h2>Atividades já adicionadas ao planejamento.</h2>
+          <p>Os hotéis e locais adicionados aparecem aqui com dia, horário e descrição.</p>
+        </div>
+
+        @if (itineraryLoading()) {
+          <p class="state">Carregando roteiro...</p>
+        } @else if (itineraryItems().length) {
+          <div class="itinerary-grid">
+            @for (activity of itineraryItems(); track activity.id) {
+              <article class="itinerary-item">
+                <time>
+                  <span>Dia {{ activity.day }}</span>
+                  <strong>{{ activity.time ? activity.time.slice(0, 5) : '--:--' }}</strong>
+                </time>
+                <div>
+                  <strong>{{ activity.activity }}</strong>
+                  @if (activity.location) {
+                    <small>{{ activity.location }}</small>
+                  }
+                  @if (activity.description) {
+                    <p>{{ activity.description }}</p>
+                  }
+                </div>
+              </article>
+            }
+          </div>
+        } @else {
+          <p class="state">Nenhuma atividade no roteiro desta viagem ainda.</p>
+        }
+      </section>
+
       <section class="places-section">
         <div class="section-heading">
-          <span>Locais próximos</span>
-          <h2>Restaurantes, hotéis, cafés, praias, museus e atrações para esta viagem.</h2>
-          <p>Salve lugares diretamente como favoritos e mantenha tudo conectado ao seu planejamento.</p>
+          <span>Hotéis sugeridos</span>
+          <h2>Escolha um hotel para adicionar ao roteiro.</h2>
+          <p>Mostramos poucas sugestões para manter a decisão simples. O botão abre um modal com dia, horário e descrição.</p>
         </div>
 
         @if (favoriteMessage()) {
           <p class="success">{{ favoriteMessage() }}</p>
+        }
+
+        @if (itineraryMessage()) {
+          <p class="success">{{ itineraryMessage() }}</p>
         }
 
         @if (placesLoading()) {
@@ -66,9 +104,9 @@
             <article class="place-card skeleton"></article>
             <article class="place-card skeleton"></article>
           </div>
-        } @else if (places().length) {
+        } @else if (hotelSuggestions().length) {
           <div class="place-grid">
-            @for (place of places(); track place.id || place.name) {
+            @for (place of hotelSuggestions(); track place.id || place.name) {
               <article class="place-card">
                 <img [src]="place.image || 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=500&q=80'" [alt]="place.name || 'Local próximo'">
                 <div>
@@ -79,15 +117,60 @@
                     <b>{{ place.rating || '8.5' }}/10</b>
                     <b>{{ place.distance || 900 }} m</b>
                   </div>
-                  <button mat-stroked-button type="button" (click)="savePlace(place)">Salvar nos favoritos</button>
+                  <div class="place-actions">
+                    <button mat-flat-button color="primary" type="button" (click)="openItineraryModal(place)">Adicionar ao roteiro</button>
+                    <button mat-stroked-button type="button" (click)="savePlace(place)">Salvar nos favoritos</button>
+                  </div>
                 </div>
               </article>
             }
           </div>
         } @else {
-          <p class="state">Nenhum local retornado pela API para este destino ainda.</p>
+          <p class="state">Nenhum hotel retornado pela API para este destino ainda.</p>
         }
       </section>
     }
   }
 </main>
+
+@if (selectedPlace(); as place) {
+  <div class="modal-backdrop" (click)="closeItineraryModal()">
+    <section class="itinerary-modal" role="dialog" aria-modal="true" aria-labelledby="itinerary-modal-title" (click)="$event.stopPropagation()">
+      <button class="close" type="button" aria-label="Fechar" (click)="closeItineraryModal()">×</button>
+
+      <span class="eyebrow">Adicionar ao roteiro</span>
+      <h2 id="itinerary-modal-title">{{ place.name || 'Local próximo' }}</h2>
+      <p>{{ place.address }}</p>
+
+      <form [formGroup]="itineraryForm" (ngSubmit)="addPlaceToItinerary()">
+        <mat-form-field appearance="outline">
+          <mat-label>Dia</mat-label>
+          <input matInput type="number" min="1" [appNonNegativeNumber]="1" formControlName="day">
+          @if (itineraryForm.controls.day.touched && itineraryForm.controls.day.hasError('required')) {
+            <mat-error>Informe o dia do roteiro.</mat-error>
+          }
+          @if (itineraryForm.controls.day.touched && itineraryForm.controls.day.hasError('min')) {
+            <mat-error>O dia deve ser maior que zero.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Horário</mat-label>
+          <input matInput type="time" formControlName="time">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Descrição</mat-label>
+          <input matInput formControlName="note" placeholder="Ex: reservar mesa ou visitar ao pôr do sol">
+        </mat-form-field>
+
+        <div class="modal-actions">
+          <button mat-stroked-button type="button" (click)="closeItineraryModal()">Cancelar</button>
+          <button mat-flat-button color="primary" type="submit" [disabled]="itinerarySaving()">
+            {{ itinerarySaving() ? 'Adicionando...' : 'Adicionar ao roteiro' }}
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+}
